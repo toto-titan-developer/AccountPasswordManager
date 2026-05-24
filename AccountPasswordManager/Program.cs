@@ -7,15 +7,38 @@
 ///Due Date: June 5th 2026
 ///
 
+using AccountInformation;
+using System.Text.Json;
+
 namespace AccountPasswordManager
 {
-    internal class Program
+    class Program
     {
+        //Declare the constant file path names:
+        private const string accountFile = "accountsList.json";
+        private const string SchemaFile = "jsonSchema.json";
+
+
         static void Main(string[] args)
         {
             Console.WriteLine("Hello party people!");
 
+            Account acct = new Account();
 
+
+
+            string json = JsonSerializer.Serialize(acct);
+
+            File.WriteAllText(accountFile, json);
+
+            try
+            {
+                string accounts = File.ReadAllText(accountFile);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading the json file {ex.Message}");
+            }
 
         }
     }

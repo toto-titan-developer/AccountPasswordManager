@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "Title": "Account Password Manager",
+
+  "Type": "object",
+  {
+    "Description": {
+      "type": "string"
+    },
+
+    "UserId": {
+      "type": "string",
+      "minimum": 6,
+      "pattern": "^\\S+$"
+    },
+
+    "LoginUrl": {
+      "type": "string",
+      "format": "uri"
+    },
+
+    "PasswordInfo": {
+      "type": "Object"
+    },
+
+    "Notes": {
+      "type": "string"
+    }
+  },
+
+  "PasswordInfo": {
+    "Password": {
+      "type": "string",
+      "Minimum": 6,
+      "pattern": "^\\S+$"
+    },
+
+    "StrengthNum": {
+      "type": "integer"
+    },
+
+    "StrengthText": {
+      "type": "string",
+      "enum": [
+        "very weak",
+        "weak",
+        "medium",
+        "strong",
+        "very strong"
+      ]
+    },
+
+    "LastReset": {
+      "type": "string",
+      "format": "Date"
+    }
+  },
+
+  "required": [
+    "Description",
+    "UserId",
+    "passwordInfo",
+    "LoginUrl",
+    "Password",
+    "StrengthText",
+    "LastReset"
+  ]
+}

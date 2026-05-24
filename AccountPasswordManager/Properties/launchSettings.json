@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AccountPasswordManager": {
+      "commandName": "Project",
+      "workingDirectory": "./"
+    }
+  }
+}

@@ -1,16 +1,18 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema",
-  "Title": "Account Password Manager",
+  "$schema": "http://json-schema.org/draft-07/schema#",
 
-  "Type": "object",
-  {
+  "title": "Account Password Manager",
+
+  "type": "object",
+
+  "properties": {
     "Description": {
       "type": "string"
     },
 
     "UserId": {
       "type": "string",
-      "minimum": 6,
+      "minLength": 6,
       "pattern": "^\\S+$"
     },
 
@@ -20,7 +22,41 @@
     },
 
     "PasswordInfo": {
-      "type": "Object"
+      "type": "object",
+
+      "properties": {
+        "Password": {
+          "type": "string",
+          "minLength": 6,
+          "pattern": "^\\S+$"
+        },
+
+        "StrengthNum": {
+          "type": "integer"
+        },
+
+        "StrengthText": {
+          "type": "string",
+          "enum": [
+            "very weak",
+            "weak",
+            "medium",
+            "strong",
+            "very strong"
+          ]
+        },
+
+        "LastReset": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+
+      "required": [
+        "Password",
+        "StrengthText",
+        "LastReset"
+      ]
     },
 
     "Notes": {
@@ -28,41 +64,10 @@
     }
   },
 
-  "PasswordInfo": {
-    "Password": {
-      "type": "string",
-      "Minimum": 6,
-      "pattern": "^\\S+$"
-    },
-
-    "StrengthNum": {
-      "type": "integer"
-    },
-
-    "StrengthText": {
-      "type": "string",
-      "enum": [
-        "very weak",
-        "weak",
-        "medium",
-        "strong",
-        "very strong"
-      ]
-    },
-
-    "LastReset": {
-      "type": "string",
-      "format": "Date"
-    }
-  },
-
   "required": [
     "Description",
     "UserId",
-    "passwordInfo",
     "LoginUrl",
-    "Password",
-    "StrengthText",
-    "LastReset"
+    "PasswordInfo"
   ]
 }

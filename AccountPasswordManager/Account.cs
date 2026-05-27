@@ -18,23 +18,6 @@ namespace AccountInformation
         public string? LoginUrl { get; set; }
         public PasswordInfo? PasswordInfo { get; set; }
         public string? Notes { get; set; }
-
-        public Account(string desc = "facebook", string userID ="user101", string loginUrl = "https//www.facebooklogin.com", PasswordInfo? passInfo = default , string notes ="some note")
-        {
-            Description = desc;
-            UserId = userID;
-            LoginUrl = loginUrl;
-            if(passInfo == default)
-            {
-                PasswordInfo = new PasswordInfo();
-            }
-            else
-            {
-                PasswordInfo = passInfo;
-            }
-
-            Notes = notes;
-        }
     }
 
     internal class PasswordInfo
@@ -43,13 +26,5 @@ namespace AccountInformation
         public int? StrengthNumber { get; set; }
         public string? StrengthText { get; set; }
         public string? LastReset {  get; set; }
-
-        public PasswordInfo(string pass ="123456", int str=0, string strTxt="very weak", string lastReset="1990-01-01")
-        {
-            Password = pass;
-            StrengthNumber = str;
-            StrengthText = strTxt;
-            LastReset = lastReset;
-        }
     }
 }

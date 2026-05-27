@@ -1,1 +1,29 @@
-{"Description":"facebook","UserId":"user101","LoginUrl":"https//www.facebooklogin.com","PasswordInfo":{"Password":"123456","StrengthNumber":0,"StrengthText":"very weak","LastReset":"1990-01-01"},"Notes":"some note"}
+[
+  {
+    "Description": "facebook",
+    "UserId": "user101",
+    "LoginUrl": "https://www.facebook.com/login",
+    "PasswordInfo": {
+      "Password": "123456",
+      "StrengthNumber": 0,
+      "StrengthText": "very weak",
+      "LastReset": "1990-01-01"
+    },
+    "Notes": "some note"
+  },
+  {
+    "Description": "Tiktok",
+    "UserId": "user105",
+    "LoginUrl": "https://www.tiktok.com/login",
+    "PasswordInfo": {
+      "Password": "654321",
+      "StrengthNumber": 1,
+      "StrengthText": "weak",
+      "LastReset": "1999-11-11"
+    },
+    "Notes": "some note 2"
+  }
+
+
+
+]

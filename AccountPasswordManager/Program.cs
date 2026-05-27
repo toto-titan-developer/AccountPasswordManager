@@ -18,7 +18,7 @@ namespace AccountPasswordManager
         //Declare the constant file path names:
         private const string accountFile = "accountsList.json";
         private const string SchemaFile = "jsonSchema.json";
-        private List<Account> accountList = new();
+        private static List<Account>? accountList = new List<Account>();
 
 
         static void Main(string[] args)
@@ -28,7 +28,9 @@ namespace AccountPasswordManager
             {
                 //File exists lets read and populate
 
-                //NEED TO ACTION //For Joe
+                //NEED TO ACTION 
+                string json = File.ReadAllText(accountFile);
+                accountList = JsonSerializer.Deserialize<List<Account>>(json);
 
             }
             else

@@ -8,7 +8,7 @@
 ///
 
 
-namespace AccountInformation
+namespace AccountPasswordManager
 {
     internal class Account
     {

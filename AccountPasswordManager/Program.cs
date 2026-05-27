@@ -9,6 +9,7 @@
 
 using AccountInformation;
 using System.Text.Json;
+using System.Collections.Generic;
 
 namespace AccountPasswordManager
 {
@@ -17,28 +18,43 @@ namespace AccountPasswordManager
         //Declare the constant file path names:
         private const string accountFile = "accountsList.json";
         private const string SchemaFile = "jsonSchema.json";
+        private List<Account> accountList = new();
 
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello party people!");
-
-            Account acct = new Account();
-
-
-
-            string json = JsonSerializer.Serialize(acct);
-
-            File.WriteAllText(accountFile, json);
-
-            try
+            //Initialize the JSON data if it exists
+            if (File.Exists(accountFile))
             {
-                string accounts = File.ReadAllText(accountFile);
+                //File exists lets read and populate
+
+                //NEED TO ACTION //For Joe
+
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error loading the json file {ex.Message}");
+                Console.WriteLine("There are currently no saved accounts.");
             }
+
+
+            //Enter into a controlled infinite loop with a sentianal value for exiting (Ending the program)
+            while (true)
+            {
+                // add the menu options to the console
+
+                //ask the user for input
+
+                //validate the input
+
+
+                //Use switch statement to determine selected option
+
+                // If End selection choosen then break
+                break;
+
+            }
+
+
 
         }
     }

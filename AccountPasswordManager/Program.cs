@@ -9,6 +9,7 @@
 
 using AccountInformation;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Collections.Generic;
 
 namespace AccountPasswordManager
@@ -18,7 +19,7 @@ namespace AccountPasswordManager
         //Declare the constant file path names:
         private const string accountFile = "accountsList.json";
         private const string SchemaFile = "jsonSchema.json";
-        private List<Account> accountList = new();
+        private static List<Account>? accountList = new List<Account>();
 
 
         static void Main(string[] args)
@@ -27,9 +28,8 @@ namespace AccountPasswordManager
             if (File.Exists(accountFile))
             {
                 //File exists lets read and populate
-
-                //NEED TO ACTION //For Joe
-
+                string json = File.ReadAllText(accountFile);
+                accountList = JsonSerializer.Deserialize<List<Account>>(json);
             }
             else
             {
@@ -41,21 +41,27 @@ namespace AccountPasswordManager
             while (true)
             {
                 // add the menu options to the console
+                Console.WriteLine(
+                    "\nPress # from the above list to select an entry\n" +
+                    "Press A to list accounts by password age.\n" +
+                    "Press N to add a new entry.\n" +
+                    "Press X to quit.");
 
                 //ask the user for input
+
+                Console.Write("Enter a command: ");
+                char input = Console.ReadKey().KeyChar;
 
                 //validate the input
 
 
                 //Use switch statement to determine selected option
-
-                // If End selection choosen then break
-                break;
-
+                //Implement a switch statemet for select #, A, N, X
+                if(Char.ToUpper(input) == 'X')
+                {
+                    break;
+                }
             }
-
-
-
         }
     }
 }

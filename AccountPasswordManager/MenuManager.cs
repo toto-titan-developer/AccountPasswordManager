@@ -41,6 +41,14 @@ namespace AccountPasswordManager
                     "Press N to add a new entry.\n" +
                     "Press X to quit.");
         }
+        public void DisplayPasswordOptions()
+        {
+            //I just copied the MainOptions...
+            Console.WriteLine(
+                    "\nPress P to change this password.\n" +
+                    "Press D to delete this entry.\n" +
+                    "Press M to return to the main menu.");
+        }
 
         public void SelectAccount(int n)
         {
@@ -48,7 +56,7 @@ namespace AccountPasswordManager
         }
 
 
-        public void AddNewAccount()
+        public void AddNewAccount()//Validate before adding to the List
         {
 
         }

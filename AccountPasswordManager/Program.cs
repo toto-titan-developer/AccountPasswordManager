@@ -4,10 +4,10 @@
 ///Conttributers: Wyatt Henderson, Joe Whitton
 ///Description: Using JSON serialization and parsing to pull and validate a JSOn file of account information with a JSON Schema
 ///Start Date: May 24, 2026
+///Version: 1.01
 ///Due Date: June 5th 2026
 ///
 
-using AccountInformation;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Collections.Generic;
@@ -19,11 +19,20 @@ namespace AccountPasswordManager
         //Declare the constant file path names:
         private const string accountFile = "accountsList.json";
         private const string SchemaFile = "jsonSchema.json";
+        //Gloabal Variables
         private static List<Account>? accountList = new List<Account>();
+        private static MenuManager MenuManager = new MenuManager();
+
+        private const string AppName = "+------------------------------------------------------------------------+\n" +
+                                       "|                            Joe & Wyatt's                               |\n" +
+                                       "|                           Password Manager                             |\n" +
+                                       "+------------------------------------------------------------------------+\n";
 
 
         static void Main(string[] args)
         {
+            Console.Write(AppName);
+
             //Initialize the JSON data if it exists
             if (File.Exists(accountFile))
             {
@@ -37,20 +46,20 @@ namespace AccountPasswordManager
             }
 
 
-            //Enter into a controlled infinite loop with a sentianal value for exiting (Ending the program)
+            //Enter into a controlled infinite loop with a sentinel value for exiting (Ending the program)
             while (true)
             {
                 // add the menu options to the console
-                Console.WriteLine(
-                    "\nPress # from the above list to select an entry\n" +
-                    "Press A to list accounts by password age.\n" +
-                    "Press N to add a new entry.\n" +
-                    "Press X to quit.");
+                MenuManager.DisplayMainOptions();
 
                 //ask the user for input
 
                 Console.Write("Enter a command: ");
                 char input = Console.ReadKey().KeyChar;
+
+                //CLEARS THE MENU SO THAT WE CAN HAVE A TITLE AND THE CONSOLE WILL SEEM DYNAMIC
+                //NEEDS TO BE MOVED BUT CHECK IT OUT
+                MenuManager.ClearMenu(4);
 
                 //validate the input
 

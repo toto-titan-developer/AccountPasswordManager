@@ -47,6 +47,7 @@ namespace AccountPasswordManager
             }
             else
             {
+                accountList = new();
                 Console.WriteLine("There are currently no saved accounts.");
             }
 
@@ -54,6 +55,8 @@ namespace AccountPasswordManager
             //Enter into a controlled infinite loop with a flag value for exiting (Ending the program)
             while (programRunning)
             {
+                if (accountList == null) break; //Prevents an error with accountList being null;
+
                 MenuManager.DisplayAllEntries(accountList);
 
                 // add the menu options to the console

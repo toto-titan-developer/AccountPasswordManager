@@ -26,6 +26,10 @@ namespace AccountPasswordManager
         private static List<Account>? accountList = new List<Account>();
         private static MenuManager MenuManager = new MenuManager();
 
+        private static bool programRunning = true;
+
+        private static string mainRegex = @"^[ANX]$|^[1-9]\d*$";
+
         private const string AppName = "+------------------------------------------------------------------------+\n" +
                                        "|                            Joe & Wyatt's                               |\n" +
                                        "|                           Password Manager                             |\n" +
@@ -45,12 +49,13 @@ namespace AccountPasswordManager
             }
             else
             {
+                accountList = new();
                 Console.WriteLine("There are currently no saved accounts.");
             }
 
 
-            //Enter into a controlled infinite loop with a sentinel value for exiting (Ending the program)
-            while (true)
+            //Enter into a controlled infinite loop with a flag value for exiting (Ending the program)
+            while (programRunning)
             {
                 //AccountList call to display 
                 MenuManager.DisplayAllEntries(accountList);
@@ -63,13 +68,20 @@ namespace AccountPasswordManager
                 Console.Write("Enter a command: ");
                 char input = Console.ReadKey().KeyChar;
 
-                //CLEARS THE MENU SO THAT WE CAN HAVE A TITLE AND THE CONSOLE WILL SEEM DYNAMIC
-                //NEEDS TO BE MOVED BUT CHECK IT OUT
-                MenuManager.ClearMenu(4);
+                //Validate the entry
+                while(true)
+                {
+                    if(Regex.IsMatch(Char.ToUpper(input).ToString(), mainRegex))
+                    { break; }
 
-                //validate the input
+                    //Get New Entry -> display invalid entry
+                    Console.Write("Enter a command: ");
+                    input = Console.ReadKey().KeyChar;
+                }
 
 
+                
+ 
                 //Use switch statement to determine selected option
                 //Implement a switch statemet for select #, A, N, X
                 switch (Char.ToUpper(input))
@@ -96,9 +108,52 @@ namespace AccountPasswordManager
                 }
                 if(Char.ToUpper(input) == 'X')
                 {
-                    break;
+                    switch (Char.ToUpper(input))
+                    {
+                        case 'A':
+                            int numWeeks = 0;
+                            while(true)
+                            {
+                                try
+                                {
+                                    Console.Write("\nEnter minimum password age in weeks: ");
+                                    int weeks = int.Parse(Console.ReadLine());
+                                    numWeeks = weeks;
+                                    if (numWeeks > 0)
+                                    {
+                                        break;
+                                    }
+                                }
+                                catch(Exception e)
+                                {
+                                    Console.WriteLine($"{e.Message}");
+                                }
+                                
+                            }
+                            MenuManager.ClearMenu();
+                            List<Account> passAccts = MenuManager.GetListOfPassNotChanged(accountList, numWeeks);
+                            MenuManager.DisplayPasswordOptions();
+                            Console.Write("Enter a command: ");
+                            input = Console.ReadKey().KeyChar;
+
+                            MenuManager.ClearMenu();
+
+                            break;
+                        case 'N':
+
+                            break;
+                        case 'X':
+                            programRunning = false; //ends the program
+                            break;
+
+                    }
                 }
                 
+
+                //CLEARS THE MENU SO THAT WE CAN HAVE A TITLE AND THE CONSOLE WILL SEEM DYNAMIC
+                //NEEDS TO BE MOVED BUT CHECK IT OUT
+                //MenuManager.ClearMenu();
+
             }
         }
 

@@ -49,6 +49,8 @@ namespace AccountPasswordManager
             //Enter into a controlled infinite loop with a sentinel value for exiting (Ending the program)
             while (true)
             {
+                MenuManager.DisplayAllEntries(accountList);
+
                 // add the menu options to the console
                 MenuManager.DisplayMainOptions();
 
@@ -70,6 +72,7 @@ namespace AccountPasswordManager
                 {
                     break;
                 }
+                
             }
         }
     }

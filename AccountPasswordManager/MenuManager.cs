@@ -10,7 +10,7 @@ namespace AccountPasswordManager
     internal class MenuManager
     {
         //private static int maxLineLength = 50; 
-        
+     
         public void ClearMenu(int endRow)
         {
             int start = Console.GetCursorPosition().Top;
@@ -25,8 +25,26 @@ namespace AccountPasswordManager
 
         public void DisplayAllEntries(List<Account> list)
         {
+            //Incrementing number for account
+            int accountNumber = 0;
 
+            //Header for Page
+            Console.WriteLine(
+            "+------------------------------------------------------------------------+\n" +
+            "|                             Account Entries                            |\n" +                                                        
+            "+------------------------------------------------------------------------+\n");
+
+
+            //Loops through the list and Displays The Account Names
+            foreach (Account account in list)
+            {
+                accountNumber++;
+                
+                Console.WriteLine(
+                    $" {accountNumber}.{account.Description}");
+            }
         }
+
         public void DisplayPassChangedN(List<Account> list, int weeks)
         {
 
@@ -50,13 +68,18 @@ namespace AccountPasswordManager
                     "Press M to return to the main menu.");
         }
 
-        public void SelectAccount(int n)
+        public void SelectAccount(List<Account> list, int n)
         {
+            //checks
+            if (n < 0 && n >= list.Count())
+            { 
+                
+            }
 
         }
 
 
-        public void AddNewAccount()//Validate before adding to the List
+        public void AddNewAccount(List<Account> accounts)     //Validate before adding to the List
         {
 
         }

@@ -27,11 +27,50 @@ namespace AccountPasswordManager
         {
 
         }
-        public void DisplayPassChangedN(List<Account> list, int weeks)
-        {
 
+        private int GetNumberOfWeeks(string date)
+        {
+            // get the last resest date
+            var resetDate = DateOnly.Parse(date);
+            //get todays date
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            //Caculate the number of weeks since the last time the password was changed
+            return (today.DayNumber - resetDate.DayNumber) / 7;
         }
 
+        public List<Account> GetListOfPassNotChanged(List<Account> list, int weeks)
+        {
+            List<Account> indexes = new List<Account>();
+
+            foreach(Account acct in list)
+            {
+                
+                //Check if account Password info is null
+                if (acct.PasswordInfo == null) continue;
+
+
+                int numberOfWeeks = GetNumberOfWeeks(acct.PasswordInfo.LastReset);
+
+                //Check if the number of weeks since being changed is greater than or equal to weeks
+                if(numberOfWeeks >= weeks)
+                {
+                    indexes.Add(acct);
+                }
+                //Increment count used for the index
+
+            }
+            return indexes;
+        }
+
+        //public void DisplayPassNotChanged(List<Account> accts, List<int> indexes)
+        //{
+        //    foreach(int index in indexes)
+        //    {
+                
+        //    }
+        //}
+
+     
         public void DisplayMainOptions()
         {
             //Needs updating

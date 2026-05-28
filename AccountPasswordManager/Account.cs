@@ -12,19 +12,19 @@ namespace AccountPasswordManager
 {
     internal class Account
     {
-        
-        public string? Description { get; set; }
-        public string? UserId { get; set; }
-        public string? LoginUrl { get; set; }
+
+        public string Description { get; set; } = "";
+        public string UserId { get; set; } = "";
+        public string LoginUrl { get; set; } = "";
         public PasswordInfo? PasswordInfo { get; set; }
-        public string? Notes { get; set; }
+        public string Notes { get; set; } = "";
     }
 
     internal class PasswordInfo
     {
-        public string? Password { get; set; }
-        public int? StrengthNumber { get; set; }
-        public string? StrengthText { get; set; }
-        public string? LastReset {  get; set; }
+        public string Password { get; set; } = "";
+        public int StrengthNumber { get; set; } = 0;
+        public string StrengthText { get; set; } = "";
+        public string LastReset {  get; set; } = "";
     }
 }

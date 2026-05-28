@@ -63,7 +63,7 @@ namespace AccountPasswordManager
 
                 //validate the input
 
-
+ 
                 //Use switch statement to determine selected option
                 //Implement a switch statemet for select #, A, N, X
                 if(Char.ToUpper(input) == 'X')

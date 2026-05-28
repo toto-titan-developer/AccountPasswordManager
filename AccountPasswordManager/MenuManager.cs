@@ -10,9 +10,11 @@ namespace AccountPasswordManager
     internal class MenuManager
     {
         //private static int maxLineLength = 50; 
-        
-        public void ClearMenu(int endRow)
+     
+        public void ClearMenu()
         {
+            int endRow = 4;
+
             int start = Console.GetCursorPosition().Top;
             string blankLine = new string(' ', Console.WindowWidth);
             for(int i = start; i > endRow; i--)
@@ -24,6 +26,28 @@ namespace AccountPasswordManager
         }
 
         public void DisplayAllEntries(List<Account> list)
+        {
+            //Incrementing number for account
+            int accountNumber = 0;
+
+            //Header for Page
+            Console.WriteLine(
+            "+------------------------------------------------------------------------+\n" +
+            "|                             Account Entries                            |\n" +                                                        
+            "+------------------------------------------------------------------------+\n");
+
+
+            //Loops through the list and Displays The Account Names
+            foreach (Account account in list)
+            {
+                accountNumber++;
+                
+                Console.WriteLine(
+                    $" {accountNumber}.{account.Description}");
+            }
+        }
+
+        public void DisplayPassChangedN(List<Account> list, int weeks)
         {
 
         }
@@ -40,7 +64,7 @@ namespace AccountPasswordManager
 
         public List<Account> GetListOfPassNotChanged(List<Account> list, int weeks)
         {
-            List<Account> indexes = new List<Account>();
+            List<Account> passAccounts = new List<Account>();
 
             foreach(Account acct in list)
             {
@@ -53,24 +77,36 @@ namespace AccountPasswordManager
 
                 //Check if the number of weeks since being changed is greater than or equal to weeks
                 if(numberOfWeeks >= weeks)
-                {
-                    indexes.Add(acct);
-                }
-                //Increment count used for the index
+                    passAccounts.Add(acct);
+                
 
             }
-            return indexes;
+            DisplayPassNotChanged(list, passAccounts, weeks);
+            return passAccounts;
         }
 
-        //public void DisplayPassNotChanged(List<Account> accts, List<int> indexes)
-        //{
-        //    foreach(int index in indexes)
-        //    {
-                
-        //    }
-        //}
+        public void DisplayPassNotChanged(List<Account> accts, List<Account> passAccounts, int weeks)
+        {
+            Console.WriteLine("+------------------------------------------------------------------------+\n" +
+                              $"|         Accounts With Passwords That Are {weeks} Or More Week(s) Old        |\n" +
+                              "+------------------------------------------------------------------------+\n");
 
-     
+            int index = 1;
+            foreach (Account acct in accts)
+            {
+                if(passAccounts.Contains(acct))
+                {
+                    if(acct.PasswordInfo == null) continue;
+
+                    Console.WriteLine(
+                        $" {index}. {acct.Description}, {GetNumberOfWeeks(acct.PasswordInfo.LastReset)} week(s)"
+                        );
+                }
+                index++;
+            }
+        }
+
+
         public void DisplayMainOptions()
         {
             //Needs updating
@@ -84,18 +120,30 @@ namespace AccountPasswordManager
         {
             //I just copied the MainOptions...
             Console.WriteLine(
+                    "\nPress # from the above list to select an entry. \n" +
+                    "Press M to return to the main menu.");
+        }
+        public void DisplayUpdateOptions()
+        {
+            //I just copied the MainOptions...
+            Console.WriteLine(
                     "\nPress P to change this password.\n" +
                     "Press D to delete this entry.\n" +
                     "Press M to return to the main menu.");
         }
 
-        public void SelectAccount(int n)
+        public void SelectAccount(List<Account> list, int n)
         {
+            //checks
+            if (n < 0 && n >= list.Count())
+            { 
+                
+            }
 
         }
 
 
-        public void AddNewAccount()//Validate before adding to the List
+        public void AddNewAccount(List<Account> accounts)     //Validate before adding to the List
         {
 
         }

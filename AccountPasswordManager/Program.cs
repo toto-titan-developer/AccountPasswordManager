@@ -8,10 +8,12 @@
 ///Due Date: June 5th 2026
 ///
 
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Json.Schema;
+using Json.Schema.Keywords;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace AccountPasswordManager
 {
@@ -55,8 +57,7 @@ namespace AccountPasswordManager
             //Enter into a controlled infinite loop with a flag value for exiting (Ending the program)
             while (programRunning)
             {
-                if (accountList == null) break; //Prevents an error with accountList being null;
-
+                //AccountList call to display 
                 MenuManager.DisplayAllEntries(accountList);
 
                 // add the menu options to the console
@@ -83,11 +84,29 @@ namespace AccountPasswordManager
  
                 //Use switch statement to determine selected option
                 //Implement a switch statemet for select #, A, N, X
-                if(Char.IsNumber(input))//Only works for 1 - 9
+                switch (Char.ToUpper(input))
                 {
-                    Console.WriteLine("A number was selected");
+                    case 'X':
+                        return;
+
+                    case 'N':
+                        //Add Account goes here
+                        break;
+
+                    case 'A':
+                        //Display Old Passwords
+                        break;
+
+                    default:
+                        if (Char.IsDigit(input))
+                        {
+                            int index = int.Parse(input.ToString()) - 1;
+                            if (index >= 0 && index < accountList.Count)
+                            { MenuManager.SelectAccount(accountList, index); }
+                        }
+                        break;
                 }
-                else
+                if(Char.ToUpper(input) == 'X')
                 {
                     switch (Char.ToUpper(input))
                     {
@@ -137,5 +156,66 @@ namespace AccountPasswordManager
 
             }
         }
+
+
+
+        //Can be moved....
+        public static bool ValidateAccount(Account account)
+        {
+            try
+            {
+                // Read the JSON schema file
+                string schemaText =
+                    File.ReadAllText(SchemaFile);
+
+                // Convert schema text into a JsonSchema object
+                JsonSchema schema =
+                    JsonSchema.FromText(schemaText);
+
+                // Serialize the account object into JSON
+                string json =
+                    JsonSerializer.Serialize(account);
+
+                // Parse JSON into a JsonDocument
+                JsonDocument document =
+                    JsonDocument.Parse(json);
+
+                // Validate JSON against schema
+                EvaluationResults results =
+                    schema.Evaluate(document.RootElement);
+
+                // If validation fails, display errors
+                if (!results.IsValid)
+                {
+                    Console.WriteLine("\nERROR: Account validation failed:\n");
+
+                    // Loop through validation details
+                    foreach (var detail in results.Details)
+                    {
+                        // Gets erros to display what they are missing
+                        if (detail.Errors != null)
+                        {
+                            foreach (var error in detail.Errors)
+                            {
+                                Console.WriteLine($"ERROR: {error.Value}");
+                            }
+                        }
+                    }
+                    // Validation failed
+                    return false;
+                }
+
+                // Validation passed
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Handles unexpected issues
+                Console.WriteLine($"\nERROR: Validation system failure: {ex.Message}");
+                return false;
+            }
+        }
+
+
     }
 }

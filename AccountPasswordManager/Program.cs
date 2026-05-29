@@ -36,10 +36,10 @@ namespace AccountPasswordManager
         {
             Console.Write(AppName);
 
-            //Initialize the JSON data if it exists
+            // Initialize the JSON data if it exists
             if (File.Exists(accountFile))
             {
-                //File exists lets read and populate
+                // File exists lets read and populate
                 string json = File.ReadAllText(accountFile);
                 accountList = JsonSerializer.Deserialize<List<Account>>(json);
             }
@@ -49,54 +49,54 @@ namespace AccountPasswordManager
             }
 
 
-            //Enter into a controlled infinite loop with a sentinel value for exiting (Ending the program)
+            // Enter into a controlled infinite loop with a sentinel value for exiting (Ending the program)
             while (true)
             {
-                //AccountList call to display 
+                // AccountList call to display 
                 MenuManager.DisplayAllEntries(accountList);
 
                 // add the menu options to the console
                 MenuManager.DisplayMainOptions();
 
-                //ask the user for input
+                // ask the user for input
 
                 Console.Write("Enter a command: ");
                 char input = Console.ReadKey().KeyChar;
 
-                //CLEARS THE MENU SO THAT WE CAN HAVE A TITLE AND THE CONSOLE WILL SEEM DYNAMIC
-                //NEEDS TO BE MOVED BUT CHECK IT OUT
+                // CLEARS THE MENU SO THAT WE CAN HAVE A TITLE AND THE CONSOLE WILL SEEM DYNAMIC
+                // NEEDS TO BE MOVED BUT CHECK IT OUT
                 MenuManager.ClearMenu(4);
 
-                //validate the input
+                // validate the input
 
 
-                //Use switch statement to determine selected option
-                //Implement a switch statemet for select #, A, N, X
+                // Use switch statement to determine selected option
+                // Implement a switch statemet for select #, A, N, X
                 switch (Char.ToUpper(input))
                 {
                     case 'X':
                         return;
 
                     case 'N':
-                        //Add Account goes here
+                        // Add Account goes here
                         break;
 
                     case 'A':
-                        //Display Old Passwords
+                        // Display Old Passwords
                         break;
 
                     default:
+                        // Checks to see if the input was a number
                         if (Char.IsDigit(input))
                         {
+                            // Passes the input -1, because an array starts at 0
                             int index = int.Parse(input.ToString()) - 1;
+
+                            // Validates Range of input
                             if (index >= 0 && index < accountList.Count)
                             { MenuManager.SelectAccount(accountList, index); }
                         }
                         break;
-                }
-                if(Char.ToUpper(input) == 'X')
-                {
-                    break;
                 }
                 
             }
@@ -104,7 +104,7 @@ namespace AccountPasswordManager
 
 
 
-        //Can be moved....
+        // Can be moved....
         public static bool ValidateAccount(Account account)
         {
             try
@@ -142,6 +142,7 @@ namespace AccountPasswordManager
                         {
                             foreach (var error in detail.Errors)
                             {
+                                // Prints each error
                                 Console.WriteLine($"ERROR: {error.Value}");
                             }
                         }

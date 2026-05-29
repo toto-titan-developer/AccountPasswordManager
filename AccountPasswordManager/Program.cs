@@ -66,7 +66,7 @@ namespace AccountPasswordManager
                 Console.Write("Enter a command: ");
                 char input = Console.ReadKey().KeyChar;
 
-                //Validate the entry
+                //Validate the entry. Make sure either A, N, or X, Or a Number above 0 is entered
                 while(true)
                 {
                     if(Regex.IsMatch(Char.ToUpper(input).ToString(), mainRegex))
@@ -77,95 +77,141 @@ namespace AccountPasswordManager
                     input = Console.ReadKey().KeyChar;
                 }
 
-
-                
- 
                 //Use switch statement to determine selected option
                 //Implement a switch statemet for select #, A, N, X
-                switch (Char.ToUpper(input))
+                //Selecting an account by number
+                if (Char.IsDigit(input))
                 {
-                    case 'X':
-                        return;
+                    int index = int.Parse(input.ToString()) - 1;
+                    if (index >= 0 && index < accountList.Count)
+                    {
+                        MenuManager.SelectAccount(accountList, index);
+                        MenuManager.DisplayUpdateOptions();
 
-                    case 'N':
-                        //Add Account goes here
-                        break;
-
-                    case 'A':
-                        //Display Old Passwords
-                        break;
-
-                    default:
-                        if (Char.IsDigit(input))
-                        {
-                            int index = int.Parse(input.ToString()) - 1;
-                            if (index >= 0 && index < accountList.Count)
-                            { MenuManager.SelectAccount(accountList, index); }
-                        }
-                        break;
-                }
-
-                switch (Char.ToUpper(input))
-                {
-                    case 'A':
-                        int numWeeks = 0;
-                        bool hadError = false;
-                        while (true)
-                        {
-                            try
-                            {
-                                Console.Write("\nEnter minimum password age in weeks: ");
-                                var str = Console.ReadLine();
-                                int weeks = int.Parse(str);
-                                numWeeks = weeks;
-                                if (numWeeks > 0)
-                                {
-                                    break;
-                                }
-                            }
-                            catch(Exception e)
-                            {
-                                    
-
-                                if(hadError)
-                                {
-                                    MenuManager.ClearLine(4);
-                                }
-                                else
-                                {
-                                    MenuManager.ClearLine(1);
-                                }
-
-                                Console.WriteLine($"{e.Message} \n" +
-                                    $"Enter a Whole Number");
-                                hadError = true;
-                            }
-                                
-                        }
-                        MenuManager.ClearMenu();
-                        List<Account> passAccts = MenuManager.GetListOfPassNotChanged(accountList, numWeeks);
-                        MenuManager.DisplayPasswordOptions();
+                        //Get Input from the user for this menu selection option
                         Console.Write("Enter a command: ");
                         input = Console.ReadKey().KeyChar;
 
+                        //Handle the selection for this input
+
+                        //Clear Menu and Reset for main menu
                         MenuManager.ClearMenu();
-
-                        break;
-                    case 'N':
-
-                        break;
-                    case 'X':
-                        programRunning = false; //ends the program
-                        break;
+                    }
+                    else
+                    {
+                        MenuManager.ClearMenu();
+                        Console.WriteLine($"Select '{index + 1}' is not an option from above. ");
+                    }
 
                 }
-                
-                
+                else
+                {
+                    switch (Char.ToUpper(input))
+                    {
+                        //Display Old Passwords
+                        case 'A':
+                            int numWeeks = 0;
+                            bool hadError = false;
+                            //Validation of selecting a whole number for how many weeks
+                            while (true)
+                            {
+                                try
+                                {
+                                    Console.Write("\nEnter minimum password age in weeks: ");
+                                    var str = Console.ReadLine();
+                                    int weeks = int.Parse(str);
+                                    numWeeks = weeks;
+                                    if (numWeeks > 0)
+                                    {
+                                        break;
+                                    }
+                                }
+                                catch (Exception e)
+                                {
 
-                //CLEARS THE MENU SO THAT WE CAN HAVE A TITLE AND THE CONSOLE WILL SEEM DYNAMIC
-                //NEEDS TO BE MOVED BUT CHECK IT OUT
-                //MenuManager.ClearMenu();
 
+                                    if (hadError)
+                                    {
+                                        MenuManager.ClearLine(4);
+                                    }
+                                    else
+                                    {
+                                        MenuManager.ClearLine(1);
+                                    }
+
+                                    Console.WriteLine($"{e.Message} \n" +
+                                        $"Enter a Whole Number");
+                                    hadError = true;
+                                }
+
+                            }
+                            MenuManager.ClearMenu();
+                            List<Account> passAccts = MenuManager.GetListOfPassNotChanged(accountList, numWeeks);
+                            MenuManager.DisplayPasswordOptions();
+
+                            bool errTrigger = false;
+                            while(true)
+                            {
+                                Console.Write("Enter a command: ");
+                                input = Console.ReadKey().KeyChar;
+
+                                if(Char.IsDigit(input))
+                                {
+                                    int index = int.Parse(input.ToString()) - 1;
+                                    if (index >= 0 && index < accountList.Count && passAccts.Contains(accountList[index]))
+                                    { 
+                                        MenuManager.SelectAccount(accountList, index);
+                                        MenuManager.DisplayUpdateOptions();
+                                        //Get Input from the user for this menu selection option
+                                        Console.Write("Enter a command: ");
+                                        input = Console.ReadKey().KeyChar;
+
+                                        //Handle the selection for this input
+
+                                        //Clear Menu and Reset for main menu
+                                        MenuManager.ClearMenu();
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        MenuManager.ClearLine(1);
+                                        Console.WriteLine($"Select '{index + 1}' is not an option from above. ");
+                                    }
+                                }
+                                else if(Char.ToUpper(input) == 'M')
+                                {
+                                    //Clears the menu and breaks the loop to go back to our original loop controlling main menu
+                                    MenuManager.ClearMenu();
+                                    break;
+                                }
+                                else
+                                {
+                                    if(errTrigger)
+                                        MenuManager.ClearLine(1);
+                                    else
+                                        MenuManager.ClearLine(0);
+
+                                    Console.WriteLine($"Invalid entry of '{input}' try again");
+                                    errTrigger = true;
+                                }
+                            }
+                            
+
+                            
+
+                            break;
+
+                        //Add Account goes here
+                        case 'N':
+
+                            break;
+
+                        //Exit the console application
+                        case 'X':
+                            programRunning = false; //ends the program
+                            break;
+                    }
+                }
             }
         }
 

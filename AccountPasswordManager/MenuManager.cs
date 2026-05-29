@@ -26,12 +26,13 @@ namespace AccountPasswordManager
 
         /// <summary>
         /// Clears the specified number of lines.
-        /// Must be 1 or more to execute.
+        /// Must be 0 or more to execute.
+        /// Clears the current line
         /// </summary>
         /// <param name="lines"></param>
         public void ClearLine(int lines)
         {
-            if(lines <= 0) return;
+            if(lines < 0) return;
             string blankLine = new string(' ', Console.WindowWidth);
             int count = 0;
             int pos = Console.GetCursorPosition().Top;

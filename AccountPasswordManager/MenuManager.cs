@@ -10,20 +10,45 @@ namespace AccountPasswordManager
     internal class MenuManager
     {
         //private static int maxLineLength = 50; 
-     
+        private const string AppName = "+------------------------------------------------------------------------+\n" +
+                                       "|                            Joe & Wyatt's                               |\n" +
+                                       "|                           Password Manager                             |\n" +
+                                       "+------------------------------------------------------------------------+\n";
+        /// <summary>
+        /// Clears the console and adds the AppName header.
+        /// Resets the menu in a sense
+        /// </summary>
         public void ClearMenu()
         {
-            int endRow = 4;
-
-            int start = Console.GetCursorPosition().Top;
-            string blankLine = new string(' ', Console.WindowWidth);
-            for(int i = start; i > endRow; i--)
-            {
-                Console.SetCursorPosition(0, i);
-                Console.Write(blankLine);
-            }
-            Console.SetCursorPosition(0, endRow);
+            Console.Clear();
+            Console.WriteLine(AppName);
         }//End ClearMenu()
+
+        /// <summary>
+        /// Clears the specified number of lines.
+        /// Must be 0 or more to execute.
+        /// Clears the current line
+        /// </summary>
+        /// <param name="lines"></param>
+        public void ClearLine(int lines)
+        {
+            if(lines < 0) return;
+            string blankLine = new string(' ', Console.WindowWidth);
+            int count = 0;
+            int pos = Console.GetCursorPosition().Top;
+            while (lines > count)
+            {
+                Console.SetCursorPosition(0, pos);
+                Console.Write(blankLine);
+
+                pos--;
+                count++;
+            }
+            
+            Console.SetCursorPosition(0, pos);
+            Console.Write(blankLine);
+            Console.SetCursorPosition(0, pos);
+        }
 
         public void DisplayAllEntries(List<Account> list)
         {
@@ -36,6 +61,8 @@ namespace AccountPasswordManager
             "|                             Account Entries                            |\n" +                                                        
             "+------------------------------------------------------------------------+\n");
 
+            //Could we add an if statement that makes it so if the list is empty then it prints "There are currently no saved accounts."?
+
             //Loops through the list and Displays The Account Names
             foreach (Account account in list)
             {
@@ -46,11 +73,11 @@ namespace AccountPasswordManager
             }
         }//End DisplayAllEntries()
 
-        public void DisplayPassChangedN(List<Account> list, int weeks)
-        {
-
-        }//End DisplayPassChangedN()
-
+        /// <summary>
+        /// Gets the number of days between today and the specified date
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         private int GetNumberOfWeeks(string date)
         {
             // get the last resest date
@@ -59,7 +86,7 @@ namespace AccountPasswordManager
             var today = DateOnly.FromDateTime(DateTime.Today);
             //Caculate the number of weeks since the last time the password was changed
             return (today.DayNumber - resetDate.DayNumber) / 7;
-        }
+        }//End GetNumberOfWeeks(string date)
 
         public List<Account> GetListOfPassNotChanged(List<Account> list, int weeks)
         {
@@ -82,13 +109,28 @@ namespace AccountPasswordManager
             }
             DisplayPassNotChanged(list, passAccounts, weeks);
             return passAccounts;
-        }
+        }//End GetListOfPassNotChanged(List<Account> list, int weeks)
 
-        public void DisplayPassNotChanged(List<Account> accts, List<Account> passAccounts, int weeks)
+        /// <summary>
+        /// Private method to print the list of Accounts with password greater or equal to the specified number of weeks.
+        /// </summary>
+        /// <param name="accts">List of all account data</param>
+        /// <param name="passAccounts">List of accounts that last reset is great or equal to the specified number of weeks</param>
+        /// <param name="weeks">Specified number of weeks</param>
+        private void DisplayPassNotChanged(List<Account> accts, List<Account> passAccounts, int weeks)
         {
             Console.WriteLine("+------------------------------------------------------------------------+\n" +
-                              $"|         Accounts With Passwords That Are {weeks} Or More Week(s) Old        |\n" +
+                             $"|        Accounts With Passwords That Are {weeks} Or More Week(s) Old          |\n" +
                               "+------------------------------------------------------------------------+\n");
+
+
+            if(passAccounts.Count <= 0)
+            {
+                Console.WriteLine("+------------------------------------------------------------------------+\n" +
+                                 $"|      There are no accounts with a password {weeks} Or More Week(s) Old       |\n" +
+                                  "+------------------------------------------------------------------------+\n");
+                return;
+            }
 
             int index = 1;
             foreach (Account acct in accts)
@@ -108,7 +150,6 @@ namespace AccountPasswordManager
 
         public void DisplayMainOptions()
         {
-            //Needs updating
             Console.WriteLine(
                     "\nPress # from the above list to select an entry\n" +
                     "Press A to list accounts by password age.\n" +
@@ -118,11 +159,10 @@ namespace AccountPasswordManager
 
         public void DisplayPasswordOptions()
         {
-            //I just copied the MainOptions...
             Console.WriteLine(
                     "\nPress # from the above list to select an entry. \n" +
                     "Press M to return to the main menu.");
-        }
+        }//End DisplayPasswordOptions()
         public void DisplayUpdateOptions()
         {
             //I just copied the MainOptions...
@@ -135,7 +175,7 @@ namespace AccountPasswordManager
         public void SelectAccount(List<Account> accountList, int n)
         {
             {
-                Console.Clear();
+                ClearMenu(); //Changed this to the ClearMenu method so that it retains the Title of the program.
                 Account aView = accountList[n]; 
 
                 Console.WriteLine(

@@ -38,10 +38,10 @@ namespace AccountPasswordManager
         {
             MenuManager.ClearMenu();
 
-            //Initialize the JSON data if it exists
+            // Initialize the JSON data if it exists
             if (File.Exists(accountFile))
             {
-                //File exists lets read and populate
+                // File exists lets read and populate
                 string json = File.ReadAllText(accountFile);
                 accountList = JsonSerializer.Deserialize<List<Account>>(json);
             }
@@ -55,13 +55,13 @@ namespace AccountPasswordManager
             //Enter into a controlled infinite loop with a flag value for exiting (Ending the program)
             while (programRunning)
             {
-                //AccountList call to display 
+                // AccountList call to display 
                 MenuManager.DisplayAllEntries(accountList);
 
                 // add the menu options to the console
                 MenuManager.DisplayMainOptions();
 
-                //ask the user for input
+                // ask the user for input
 
                 Console.Write("Enter a command: ");
                 char input = Console.ReadKey().KeyChar;
@@ -217,7 +217,7 @@ namespace AccountPasswordManager
 
 
 
-        //Can be moved....
+        // Can be moved....
         public static bool ValidateAccount(Account account)
         {
             try
@@ -255,6 +255,7 @@ namespace AccountPasswordManager
                         {
                             foreach (var error in detail.Errors)
                             {
+                                // Prints each error
                                 Console.WriteLine($"ERROR: {error.Value}");
                             }
                         }

@@ -31,15 +31,12 @@ namespace AccountPasswordManager
 
         private static string mainRegex = @"^[ANX]$|^[1-9]\d*$";
 
-        private const string AppName = "+------------------------------------------------------------------------+\n" +
-                                       "|                            Joe & Wyatt's                               |\n" +
-                                       "|                           Password Manager                             |\n" +
-                                       "+------------------------------------------------------------------------+\n";
+        
 
 
         static void Main(string[] args)
         {
-            Console.Write(AppName);
+            MenuManager.ClearMenu();
 
             //Initialize the JSON data if it exists
             if (File.Exists(accountFile))

@@ -25,6 +25,25 @@ namespace AccountPasswordManager
             Console.SetCursorPosition(0, endRow);
         }//End ClearMenu()
 
+        public void ClearLine(int lines)
+        {
+            string blankLine = new string(' ', Console.WindowWidth);
+            int count = 0;
+            int pos = Console.GetCursorPosition().Top;
+            while (lines > count)
+            {
+                Console.SetCursorPosition(0, pos);
+                Console.Write(blankLine);
+
+                pos--;
+                count++;
+            }
+            
+            Console.SetCursorPosition(0, pos);
+            Console.Write(blankLine);
+            Console.SetCursorPosition(0, pos);
+        }
+
         public void DisplayAllEntries(List<Account> list)
         {
             //Incrementing number for account
@@ -36,6 +55,8 @@ namespace AccountPasswordManager
             "|                             Account Entries                            |\n" +                                                        
             "+------------------------------------------------------------------------+\n");
 
+            //Could we add an if statement that makes it so if the list is empty then it prints "There are currently no saved accounts."?
+
             //Loops through the list and Displays The Account Names
             foreach (Account account in list)
             {
@@ -45,11 +66,6 @@ namespace AccountPasswordManager
                     $" {accountNumber}.{account.Description}");
             }
         }//End DisplayAllEntries()
-
-        public void DisplayPassChangedN(List<Account> list, int weeks)
-        {
-
-        }//End DisplayPassChangedN()
 
         private int GetNumberOfWeeks(string date)
         {
@@ -84,11 +100,26 @@ namespace AccountPasswordManager
             return passAccounts;
         }
 
-        public void DisplayPassNotChanged(List<Account> accts, List<Account> passAccounts, int weeks)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="accts"></param>
+        /// <param name="passAccounts"></param>
+        /// <param name="weeks"></param>
+        private void DisplayPassNotChanged(List<Account> accts, List<Account> passAccounts, int weeks)
         {
             Console.WriteLine("+------------------------------------------------------------------------+\n" +
-                              $"|         Accounts With Passwords That Are {weeks} Or More Week(s) Old        |\n" +
+                             $"|        Accounts With Passwords That Are {weeks} Or More Week(s) Old          |\n" +
                               "+------------------------------------------------------------------------+\n");
+
+
+            if(passAccounts.Count <= 0)
+            {
+                Console.WriteLine("+------------------------------------------------------------------------+\n" +
+                                 $"|      There are no accounts with a password {weeks} Or More Week(s) Old       |\n" +
+                                  "+------------------------------------------------------------------------+\n");
+                return;
+            }
 
             int index = 1;
             foreach (Account acct in accts)

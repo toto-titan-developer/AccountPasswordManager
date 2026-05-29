@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace AccountPasswordManager
 {
@@ -106,48 +107,62 @@ namespace AccountPasswordManager
                         }
                         break;
                 }
-                if(Char.ToUpper(input) == 'X')
+
+                switch (Char.ToUpper(input))
                 {
-                    switch (Char.ToUpper(input))
-                    {
-                        case 'A':
-                            int numWeeks = 0;
-                            while(true)
+                    case 'A':
+                        int numWeeks = 0;
+                        bool hadError = false;
+                        while (true)
+                        {
+                            try
                             {
-                                try
+                                Console.Write("\nEnter minimum password age in weeks: ");
+                                var str = Console.ReadLine();
+                                int weeks = int.Parse(str);
+                                numWeeks = weeks;
+                                if (numWeeks > 0)
                                 {
-                                    Console.Write("\nEnter minimum password age in weeks: ");
-                                    int weeks = int.Parse(Console.ReadLine());
-                                    numWeeks = weeks;
-                                    if (numWeeks > 0)
-                                    {
-                                        break;
-                                    }
+                                    break;
                                 }
-                                catch(Exception e)
-                                {
-                                    Console.WriteLine($"{e.Message}");
-                                }
-                                
                             }
-                            MenuManager.ClearMenu();
-                            List<Account> passAccts = MenuManager.GetListOfPassNotChanged(accountList, numWeeks);
-                            MenuManager.DisplayPasswordOptions();
-                            Console.Write("Enter a command: ");
-                            input = Console.ReadKey().KeyChar;
+                            catch(Exception e)
+                            {
+                                    
 
-                            MenuManager.ClearMenu();
+                                if(hadError)
+                                {
+                                    MenuManager.ClearLine(4);
+                                }
+                                else
+                                {
+                                    MenuManager.ClearLine(1);
+                                }
 
-                            break;
-                        case 'N':
+                                Console.WriteLine($"{e.Message} \n" +
+                                    $"Enter a Whole Number");
+                                hadError = true;
+                            }
+                                
+                        }
+                        MenuManager.ClearMenu();
+                        List<Account> passAccts = MenuManager.GetListOfPassNotChanged(accountList, numWeeks);
+                        MenuManager.DisplayPasswordOptions();
+                        Console.Write("Enter a command: ");
+                        input = Console.ReadKey().KeyChar;
 
-                            break;
-                        case 'X':
-                            programRunning = false; //ends the program
-                            break;
+                        MenuManager.ClearMenu();
 
-                    }
+                        break;
+                    case 'N':
+
+                        break;
+                    case 'X':
+                        programRunning = false; //ends the program
+                        break;
+
                 }
+                
                 
 
                 //CLEARS THE MENU SO THAT WE CAN HAVE A TITLE AND THE CONSOLE WILL SEEM DYNAMIC

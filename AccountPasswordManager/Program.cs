@@ -93,12 +93,14 @@ namespace AccountPasswordManager
                     {
                         case 'A':
                             int numWeeks = 0;
-                            while(true)
+                            bool hadError = false;
+                            while (true)
                             {
                                 try
                                 {
                                     Console.Write("\nEnter minimum password age in weeks: ");
-                                    int weeks = int.Parse(Console.ReadLine());
+                                    var str = Console.ReadLine();
+                                    int weeks = int.Parse(str);
                                     numWeeks = weeks;
                                     if (numWeeks > 0)
                                     {
@@ -107,7 +109,20 @@ namespace AccountPasswordManager
                                 }
                                 catch(Exception e)
                                 {
-                                    Console.WriteLine($"{e.Message}");
+                                    
+
+                                    if(hadError)
+                                    {
+                                        MenuManager.ClearLine(4);
+                                    }
+                                    else
+                                    {
+                                        MenuManager.ClearLine(1);
+                                    }
+
+                                    Console.WriteLine($"{e.Message} \n" +
+                                        $"Enter a Whole Number");
+                                    hadError = true;
                                 }
                                 
                             }

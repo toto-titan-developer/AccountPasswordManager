@@ -256,6 +256,54 @@ namespace AccountPasswordManager
 
         private static void HandleAddNewAccount()
         {
+            bool addAcct;
+            Account newAccount = new Account();
+            const int startCol = 25;
+            const int descLine = 7;
+            const int userIDLine = 8;
+            const int passLine = 9;
+            const int loginLine = 10;
+            const int noteLine = 11;
+            const int confLine = 13;
+
+
+            MenuManager.ClearMenu();
+            MenuManager.DisplayAddAccount();
+            Console.Write("\nAdd new account?  (Y/N): ");
+
+            Console.SetCursorPosition(startCol, descLine);
+            newAccount.Description = Console.ReadLine();
+
+            Console.SetCursorPosition(startCol, userIDLine);
+            newAccount.UserId = Console.ReadLine();
+
+            Console.SetCursorPosition(startCol, passLine);
+            newAccount.PasswordInfo.Password = Console.ReadLine();
+
+            Console.SetCursorPosition(startCol, loginLine);
+            newAccount.LoginUrl = Console.ReadLine();
+
+            Console.SetCursorPosition(startCol, noteLine);
+            newAccount.Notes = Console.ReadLine();
+
+            Console.SetCursorPosition(startCol, confLine);
+             addAcct = Char.ToUpper(Console.ReadKey().KeyChar) != 'Y';
+
+            if(addAcct)
+            {
+                //Perform finalizing the account -> Get Password strengthNum, strengthText, LastReset(today)
+
+                //Validate that the account is valid.
+
+                //if it is valid add the account and return to the main menu
+
+                //if it isn't valid Identify what is wrong and then retype those lines
+            }
+
+
+
+            MenuManager.ClearMenu();
+
 
         }
 

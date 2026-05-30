@@ -203,10 +203,22 @@ namespace AccountPasswordManager
             }
         }//End SelectedAccount()
 
+        public void DisplayAddAccount()
+        {
+            Console.WriteLine(
+                "Please key-in values for the following fields...\n\n" +
+                "Description:\n" +
+                "User ID:\n" +
+                "Password:\n" +
+                "Login url:\n" +
+                "Notes:"
+                );
+        }
 
+        //Thinking we can create this method in the Program.cs
         public void AddNewAccount(List<Account> accounts)     //Validate before adding to the List
         {
-
+            //see HandleAddNewAccount() in Program.cs
         }//End AddNewAccount()
 
         public void DeleteAccount()

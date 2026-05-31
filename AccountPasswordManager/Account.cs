@@ -16,7 +16,7 @@ namespace AccountPasswordManager
         public string Description { get; set; } = "";
         public string UserId { get; set; } = "";
         public string LoginUrl { get; set; } = "";
-        public PasswordInfo? PasswordInfo { get; set; } = new();
+        public PasswordInfo PasswordInfo { get; set; } = new();
         public string Notes { get; set; } = "";
     }
 

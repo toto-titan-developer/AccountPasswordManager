@@ -8,9 +8,13 @@
 ///Due Date: June 5th 2026
 ///
 
+using Easy_Password_Validator;
+using Easy_Password_Validator.Models;
+using Easy_Password_Validator.Tests;
 using Json.Schema;
 using Json.Schema.Keywords;
 using System.Collections.Generic;
+using System.Security.Principal;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -24,8 +28,9 @@ namespace AccountPasswordManager
         private const string accountFile = "accountsList.json";
         private const string SchemaFile = "jsonSchema.json";
         //Gloabal Variables
-        private static List<Account>? accountList = new List<Account>();
+        private static List<Account> accountList = new List<Account>();
         private static MenuManager MenuManager = new MenuManager();
+        private static PasswordValidatorService passwordValidator = new PasswordValidatorService(new PasswordRequirements());
 
         private static bool programRunning = true;
 
@@ -43,7 +48,7 @@ namespace AccountPasswordManager
             {
                 // File exists lets read and populate
                 string json = File.ReadAllText(accountFile);
-                accountList = JsonSerializer.Deserialize<List<Account>>(json);
+                accountList = JsonSerializer.Deserialize<List<Account>>(json) ?? new();
             }
             else
             {
@@ -271,40 +276,86 @@ namespace AccountPasswordManager
             MenuManager.DisplayAddAccount();
             Console.Write("\nAdd new account?  (Y/N): ");
 
-            Console.SetCursorPosition(startCol, descLine);
-            newAccount.Description = Console.ReadLine();
-
-            Console.SetCursorPosition(startCol, userIDLine);
-            newAccount.UserId = Console.ReadLine();
-
-            Console.SetCursorPosition(startCol, passLine);
-            newAccount.PasswordInfo.Password = Console.ReadLine();
-
-            Console.SetCursorPosition(startCol, loginLine);
-            newAccount.LoginUrl = Console.ReadLine();
-
-            Console.SetCursorPosition(startCol, noteLine);
-            newAccount.Notes = Console.ReadLine();
-
-            Console.SetCursorPosition(startCol, confLine);
-             addAcct = Char.ToUpper(Console.ReadKey().KeyChar) != 'Y';
-
-            if(addAcct)
+            
+            while (true)
             {
-                //Perform finalizing the account -> Get Password strengthNum, strengthText, LastReset(today)
+                Console.SetCursorPosition(startCol, descLine);
+                newAccount.Description = Console.ReadLine() ?? "";
 
-                //Validate that the account is valid.
+                Console.SetCursorPosition(startCol, userIDLine);
+                newAccount.UserId = Console.ReadLine() ?? "";
 
-                //if it is valid add the account and return to the main menu
+                Console.SetCursorPosition(startCol, passLine);
+                newAccount.PasswordInfo.Password = Console.ReadLine() ?? "";
 
-                //if it isn't valid Identify what is wrong and then retype those lines
+                Console.SetCursorPosition(startCol, loginLine);
+                newAccount.LoginUrl = Console.ReadLine() ?? "";
+
+                Console.SetCursorPosition(startCol, noteLine);
+                newAccount.Notes = Console.ReadLine() ?? "";
+
+                Console.SetCursorPosition(startCol, confLine);
+                addAcct = Char.ToUpper(Console.ReadKey().KeyChar) == 'Y';
+
+                if (addAcct)
+                {
+                    //Perform finalizing the account -> Get Password strengthNum, strengthText, LastReset(today)
+
+                    TestNUpdatePassInfo(newAccount);
+
+
+                    //Validate that the account is valid.
+
+                    bool isValid = ValidateAccount(newAccount);
+
+                    //if it is valid add the account and return to the main menu
+                    if (isValid)
+                    {
+                        AddToAccountList(newAccount);
+                        break;
+                    }
+
+                    //else it isn't valid, Identify what is wrong and then retype those lines
+                }
+                else { break; }
             }
+            
 
 
 
             MenuManager.ClearMenu();
 
 
+        }
+
+        private static void TestNUpdatePassInfo(Account acct)
+        {
+            //Perform test of password strength.
+            passwordValidator.TestAndScore(acct.PasswordInfo.Password);
+            //add the password strength score to the new account.
+            acct.PasswordInfo.StrengthNumber = passwordValidator.Score;
+            int score = acct.PasswordInfo.StrengthNumber;
+
+            if (score < -40)
+            {
+                acct.PasswordInfo.StrengthText = "very weak";
+            }
+            else if (score >= -40 && score < 0)
+            {
+                acct.PasswordInfo.StrengthText = "weak";
+            }
+            else if (score >= 0 && score < 40)
+            {
+                acct.PasswordInfo.StrengthText = "medium";
+            }
+            else if (score >= 40 && score < 80)
+            {
+                acct.PasswordInfo.StrengthText = "strong";
+            }
+            else if (score >= 80)
+            {
+                acct.PasswordInfo.StrengthText = "very strong";
+            }
         }
 
         // Can be moved....
@@ -338,7 +389,7 @@ namespace AccountPasswordManager
                     Console.WriteLine("\nERROR: Account validation failed:\n");
 
                     // Loop through validation details
-                    foreach (var detail in results.Details)
+                    foreach (var detail in results.Details) //Error on this line when running validation
                     {
                         // Gets erros to display what they are missing
                         if (detail.Errors != null)
@@ -363,6 +414,17 @@ namespace AccountPasswordManager
                 Console.WriteLine($"\nERROR: Validation system failure: {ex.Message}");
                 return false;
             }
+        }
+
+        private static void AddToAccountList(Account acct)
+        {
+            //add new account to the accountList
+            accountList.Add(acct);
+
+            //Serialize the list and update the json file;
+            string json = JsonSerializer.Serialize(accountList);
+            File.WriteAllTextAsync(accountFile, json);
+
         }
 
 

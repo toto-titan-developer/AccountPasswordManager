@@ -389,7 +389,9 @@ namespace AccountPasswordManager
                     Console.WriteLine("\nERROR: Account validation failed:\n");
 
                     // Loop through validation details
-                    foreach (var detail in results.Details) //Error on this line when running validation
+                    foreach (var detail in results.Details) //Error on this line when running validation System.NullReferenceException: 'Object reference not set to an instance of an object.'
+                        //Json.Schema.EvaluationResults.Details.get returned null.
+
                     {
                         // Gets erros to display what they are missing
                         if (detail.Errors != null)

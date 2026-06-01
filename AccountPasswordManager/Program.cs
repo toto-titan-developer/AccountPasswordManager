@@ -403,6 +403,7 @@ namespace AccountPasswordManager
                             }
                         }
                     }
+                    }
                     // Validation failed
                     return false;
                 }

@@ -10,16 +10,8 @@
 
 using Easy_Password_Validator;
 using Easy_Password_Validator.Models;
-using Easy_Password_Validator.Tests;
 using Json.Schema;
-using Json.Schema.Keywords;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.InteropServices.Marshalling;
-using System.Security.Principal;
 using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace AccountPasswordManager
@@ -74,15 +66,16 @@ namespace AccountPasswordManager
                     if (index >= 0 && index < accountList.Count)
                     {
                         MenuManager.SelectAccount(accountList, index);
-                        MenuManager.DisplayUpdateOptions();
+                        
+                        HandleUpdateMenu(accountList, index);
 
-                        //Get Input from the user for this menu selection option
+                        // Get Input from the user for this menu selection option
                         Console.Write("Enter a command: ");
                         input = Console.ReadKey().KeyChar;
 
-                        //Handle the selection for this input
+                        // Handle the selection for this input
 
-                        //Clear Menu and Reset for main menu
+                        // Clear Menu and Reset for main menu
                         MenuManager.ClearMenu();
                     }
                     else
@@ -96,17 +89,17 @@ namespace AccountPasswordManager
                 {
                     switch (Char.ToUpper(input))
                     {
-                        //Display Old Passwords
+                        // Display Old Passwords
                         case 'A':
                             HandleOldPasswordSelection();
                             break;
 
-                        //Add Account goes here
+                        // Add Account goes here
                         case 'N':
                             HandleAddNewAccount();
                             break;
 
-                        //Exit the console application
+                        // Exit the console application
                         case 'X':
                             programRunning = false; //ends the program
                             break;
@@ -172,20 +165,20 @@ namespace AccountPasswordManager
         /// Allows a user to select a option from a list
         /// We could make a method that contains
         /// </summary>
-        public void HandleUpdateMenu(List<Account> accountList, int n)
+        private static void HandleUpdateMenu(List<Account> accountList, int n)
         {
             bool running = true;
 
             while (running)
             {
                 MenuManager.DisplayUpdateOptions();
-
+                Console.WriteLine("Enter a Command: ");
                 string input = Console.ReadLine();
 
                 switch (input.ToUpper())
                 {
                     case "P":
-                           //need method to handle passwowrd update
+                        MenuManager.EditAccountPassword(accountList, n);
                            break;
                     case "D":
                         MenuManager.DeleteAccount(accountList, n);
@@ -195,7 +188,7 @@ namespace AccountPasswordManager
                         break;
 
                     default:
-                        Console.WriteLine("Invalid option. Try Again.")
+                        Console.WriteLine("Invalid option. Try Again.");
                             break;
                 }
             }
@@ -262,6 +255,8 @@ namespace AccountPasswordManager
                     {
                         MenuManager.SelectAccount(accountList, index);
                         MenuManager.DisplayUpdateOptions();
+                        HandleUpdateMenu(accountList, index);
+
                         //Get Input from the user for this menu selection option
                         Console.Write("Enter a command: ");
                         input = Console.ReadKey().KeyChar;
@@ -370,8 +365,10 @@ namespace AccountPasswordManager
         {
             //Perform test of password strength.
             passwordValidator.TestAndScore(acct.PasswordInfo.Password);
+
             //add the password strength score to the new account.
             acct.PasswordInfo.StrengthNumber = passwordValidator.Score;
+
             int score = acct.PasswordInfo.StrengthNumber;
 
             if (score < -40)
@@ -394,6 +391,15 @@ namespace AccountPasswordManager
             {
                 acct.PasswordInfo.StrengthText = "very strong";
             }
+        }
+
+        public static bool IsPasswordValid(string password)
+        {
+            // uses the validator to test the password
+            passwordValidator.TestAndScore(password);
+
+            // returns the score of the password.
+            return passwordValidator.Score >= 0;
         }
 
         /// <summary>
@@ -434,7 +440,7 @@ namespace AccountPasswordManager
                         // Loop through validation details
                         foreach (var detail in results.Details) 
                         {
-                            // Gets erros to display what they are missing
+                            // Gets errors to display what they are missing
                             if (detail.Errors != null)
                             {
                                 foreach (var error in detail.Errors)

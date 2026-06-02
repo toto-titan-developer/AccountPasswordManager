@@ -52,23 +52,24 @@ namespace AccountPasswordManager
 
         public void DisplayAllEntries(List<Account> list)
         {
-            //Incrementing number for account
-            int accountNumber = 0;
-
-            //Header for Page
+            // Header for Page
             Console.WriteLine(
             "+------------------------------------------------------------------------+\n" +
             "|                             Account Entries                            |\n" +                                                        
             "+------------------------------------------------------------------------+\n");
 
-            //Could we add an if statement that makes it so if the list is empty then it prints "There are currently no saved accounts."?
+            // Checks for empty list
+            if (list.Count == 0)
+            {
+                Console.WriteLine("There are currently no saved accounts.");
+            }
 
-            //Loops through the list and Displays The Account Names
+            // Loops through the list and Displays The Account Names
             for (int i = 0; i < list.Count; i++)
             {
                 Console.WriteLine($" {i + 1}. {list[i].Description}");
             }
-        }//End DisplayAllEntries()
+        }// End DisplayAllEntries()
 
         /// <summary>
         /// Gets the number of days between today and the specified date
@@ -79,10 +80,13 @@ namespace AccountPasswordManager
         {
             // get the last resest date
             var resetDate = DateOnly.Parse(date);
-            //get todays date
+
+            // get todays date
             var today = DateOnly.FromDateTime(DateTime.Today);
-            //Caculate the number of weeks since the last time the password was changed
+
+            // Caculate the number of weeks since the last time the password was changed
             return (today.DayNumber - resetDate.DayNumber) / 7;
+
         }//End GetNumberOfWeeks(string date)
 
         public List<Account> GetListOfPassNotChanged(List<Account> list, int weeks)
@@ -92,13 +96,13 @@ namespace AccountPasswordManager
             foreach(Account acct in list)
             {
                 
-                //Check if account Password info is null
+                // Check if account Password info is null
                 if (acct.PasswordInfo == null) continue;
 
 
                 int numberOfWeeks = GetNumberOfWeeks(acct.PasswordInfo.LastReset);
 
-                //Check if the number of weeks since being changed is greater than or equal to weeks
+                // Check if the number of weeks since being changed is greater than or equal to weeks
                 if(numberOfWeeks >= weeks)
                     passAccounts.Add(acct);
                 
@@ -106,7 +110,7 @@ namespace AccountPasswordManager
             }
             DisplayPassNotChanged(list, passAccounts, weeks);
             return passAccounts;
-        }//End GetListOfPassNotChanged(List<Account> list, int weeks)
+        }// End GetListOfPassNotChanged(List<Account> list, int weeks)
 
         /// <summary>
         /// Private method to print the list of Accounts with password greater or equal to the specified number of weeks.
@@ -142,7 +146,7 @@ namespace AccountPasswordManager
                 }
                 index++;
             }
-        }
+        }// End DisplayPassNotChanged()
 
 
         public void DisplayMainOptions()
@@ -166,13 +170,15 @@ namespace AccountPasswordManager
             Console.WriteLine(
                     "\nPress P to change this password.\n" +
                     "Press D to delete this entry.\n" +
-                    "Press M to return to the main menu.");
+                    "Press M to return to the main menu." +
+                    "\n\n+------------------------------------------------------------------------+");
         }//End DisplayPasswordOptions()
 
         public void SelectAccount(List<Account> accountList, int n)
         {
             {
-                ClearMenu(); //Changed this to the ClearMenu method so that it retains the Title of the program.
+                //keeps the program header by using ClearMenu()
+                ClearMenu(); 
                 Account aView = accountList[n]; 
 
                 Console.WriteLine(
@@ -198,7 +204,7 @@ namespace AccountPasswordManager
                 Console.WriteLine(
                 "+------------------------------------------------------------------------+");
             }
-        }//End SelectedAccount()
+        }// End SelectedAccount()
 
         public void DisplayAddAccount()
         {
@@ -210,7 +216,7 @@ namespace AccountPasswordManager
                 "Login url:\n" +
                 "Notes:"
                 );
-        }
+        }// End DisplayAddAccount()
 
         public void DeleteAccount(List<Account> accountList, int n)
         {
@@ -221,36 +227,54 @@ namespace AccountPasswordManager
             Console.WriteLine("\nAre you sure you want to delete this account? (Y/N)");
             string input = Console.ReadLine();
 
-            //checks for a yes or no
+            // checks for a yes or no
             if (input != null && input.ToUpper() == "Y")
             {
-                //Removes the account at a specified index
+                // Removes the account at a specified index
                 accountList.RemoveAt(n);
                 Console.WriteLine("\nAccount deleted successfully.");
             }
             else
             {
-                //Prevented deletion
+                // Prevented deletion
                 Console.WriteLine("\nDelete cancelled.");
             }
-        }//End DeleteAccount()
+        }// End DeleteAccount()
 
         public void EditAccountPassword(List<Account> accountList, int n)
         {
-            // Promp user for new password
-            Console.WriteLine("Enter new password: ");
-            string newPassword = Console.ReadLine();
+            while (true)
+            {
+                // Promp user for new password
+                Console.WriteLine("Enter new password: ");
+                string newPassword = Console.ReadLine();
 
-            // Update the old password
-            accountList[n].PasswordInfo.Password = newPassword;
+                //Validate the password
+                if (string.IsNullOrWhiteSpace(newPassword))
+                {
+                    Console.WriteLine("Password cannot be empty.");
+                    continue;
+                }
+                // Validate password using your validator
+                if (!Program.IsPasswordValid(newPassword))
+                {
+                    Console.WriteLine("Password does not meet the requirements.");
+                    continue;
+                }
+                else
+                {
+                    // Update the old password
+                    accountList[n].PasswordInfo.Password = newPassword;
 
-            // update reset date
-            accountList[n].PasswordInfo.LastReset = DateTime.Today.ToString("yyyy-MM-dd");
+                    // update reset date
+                    accountList[n].PasswordInfo.LastReset = DateTime.Today.ToString("yyyy-MM-dd");
+                    //Print success!
+                    Console.WriteLine("Password updated successfully.");
+                    break;
+                }
+            }
 
-            //Print success!
-            Console.WriteLine("Password updated successfully.");
-
-        }//End EditAccountPassword()
+        }// End EditAccountPassword()
 
 
     }

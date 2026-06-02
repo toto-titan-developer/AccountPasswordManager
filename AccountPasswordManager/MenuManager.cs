@@ -64,12 +64,9 @@ namespace AccountPasswordManager
             //Could we add an if statement that makes it so if the list is empty then it prints "There are currently no saved accounts."?
 
             //Loops through the list and Displays The Account Names
-            foreach (Account account in list)
+            for (int i = 0; i < list.Count; i++)
             {
-                accountNumber++;
-                
-                Console.WriteLine(
-                    $" {accountNumber}.{account.Description}");
+                Console.WriteLine($" {i + 1}. {list[i].Description}");
             }
         }//End DisplayAllEntries()
 
@@ -215,19 +212,43 @@ namespace AccountPasswordManager
                 );
         }
 
-        //Thinking we can create this method in the Program.cs
-        public void AddNewAccount(List<Account> accounts)     //Validate before adding to the List
+        public void DeleteAccount(List<Account> accountList, int n)
         {
-            //see HandleAddNewAccount() in Program.cs
-        }//End AddNewAccount()
+            // Assigns variable the account to delete
+            Account accountToDelete = accountList[n];
 
-        public void DeleteAccount()
-        {
+            // Makes sure the user wants to delete this account
+            Console.WriteLine("\nAre you sure you want to delete this account? (Y/N)");
+            string input = Console.ReadLine();
 
+            //checks for a yes or no
+            if (input != null && input.ToUpper() == "Y")
+            {
+                //Removes the account at a specified index
+                accountList.RemoveAt(n);
+                Console.WriteLine("\nAccount deleted successfully.");
+            }
+            else
+            {
+                //Prevented deletion
+                Console.WriteLine("\nDelete cancelled.");
+            }
         }//End DeleteAccount()
 
-        public void EditAccountPassword()
+        public void EditAccountPassword(List<Account> accountList, int n)
         {
+            // Promp user for new password
+            Console.WriteLine("Enter new password: ");
+            string newPassword = Console.ReadLine();
+
+            // Update the old password
+            accountList[n].PasswordInfo.Password = newPassword;
+
+            // update reset date
+            accountList[n].PasswordInfo.LastReset = DateTime.Today.ToString("yyyy-MM-dd");
+
+            //Print success!
+            Console.WriteLine("Password updated successfully.");
 
         }//End EditAccountPassword()
 

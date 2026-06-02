@@ -14,6 +14,8 @@ using Easy_Password_Validator.Tests;
 using Json.Schema;
 using Json.Schema.Keywords;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.InteropServices.Marshalling;
 using System.Security.Principal;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -163,6 +165,42 @@ namespace AccountPasswordManager
 
             return input;
         }
+
+
+        /// <summary>
+        /// Handles the Menu Selection for the account manipulations,
+        /// Allows a user to select a option from a list
+        /// We could make a method that contains
+        /// </summary>
+        public void HandleUpdateMenu(List<Account> accountList, int n)
+        {
+            bool running = true;
+
+            while (running)
+            {
+                MenuManager.DisplayUpdateOptions();
+
+                string input = Console.ReadLine();
+
+                switch (input.ToUpper())
+                {
+                    case "P":
+                           //need method to handle passwowrd update
+                           break;
+                    case "D":
+                        MenuManager.DeleteAccount(accountList, n);
+                        break;
+                    case "M":
+                        running = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid option. Try Again.")
+                            break;
+                }
+            }
+        }
+
 
         /// <summary>
         /// Handles the functionality of selection option for list of old passwords.
@@ -358,7 +396,11 @@ namespace AccountPasswordManager
             }
         }
 
-        // Can be moved....
+        /// <summary>
+        /// Takes an account object converts it into a JSON as well as the SCHEMA into a Schema object
+        /// Parses the JSON into a JsonDocument to be validated against the Schema
+        /// We could make a method that contains
+        /// </summary>
         public static bool ValidateAccount(Account account)
         {
             try
@@ -387,23 +429,23 @@ namespace AccountPasswordManager
                 if (!results.IsValid)
                 {
                     Console.WriteLine("\nERROR: Account validation failed:\n");
-
-                    // Loop through validation details
-                    foreach (var detail in results.Details) //Error on this line when running validation System.NullReferenceException: 'Object reference not set to an instance of an object.'
-                        //Json.Schema.EvaluationResults.Details.get returned null.
-
+                    if (results.Details != null)
                     {
-                        // Gets erros to display what they are missing
-                        if (detail.Errors != null)
+                        // Loop through validation details
+                        foreach (var detail in results.Details) 
                         {
-                            foreach (var error in detail.Errors)
+                            // Gets erros to display what they are missing
+                            if (detail.Errors != null)
                             {
-                                // Prints each error
-                                Console.WriteLine($"ERROR: {error.Value}");
+                                foreach (var error in detail.Errors)
+                                {
+                                    // Prints each error
+                                    Console.WriteLine($"ERROR: {error.Value}");
+                                }
                             }
                         }
                     }
-                    }
+
                     // Validation failed
                     return false;
                 }

@@ -180,7 +180,7 @@ namespace AccountPasswordManager
             {
                 MenuManager.DisplayUpdateOptions();
 
-                string input = Console.ReadLine();
+                string input = Console.ReadLine() ?? "";
 
                 switch (input.ToUpper())
                 {
@@ -195,7 +195,7 @@ namespace AccountPasswordManager
                         break;
 
                     default:
-                        Console.WriteLine("Invalid option. Try Again.")
+                        Console.WriteLine("Invalid option. Try Again.");
                             break;
                 }
             }

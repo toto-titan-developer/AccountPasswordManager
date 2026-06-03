@@ -42,7 +42,7 @@ namespace AccountPasswordManager
             {
                 // File exists lets read and populate
                 string json = File.ReadAllText(accountFile);
-                accountList = JsonSerializer.Deserialize<List<Account>>(json) ?? new();
+                accountList = JsonSerializer.Deserialize<List<Account>>(json) ?? new List<Account>();
             }
             else
             {

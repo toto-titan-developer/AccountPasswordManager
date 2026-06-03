@@ -25,6 +25,6 @@ namespace AccountPasswordManager
         public string Password { get; set; } = "";
         public int StrengthNumber { get; set; } = 0;
         public string StrengthText { get; set; } = "";
-        public string LastReset {  get; set; } = "";
+        public string LastReset {  get; set; } = DateOnly.FromDateTime(DateTime.Today).ToString();
     }
 }

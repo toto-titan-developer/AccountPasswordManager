@@ -263,6 +263,7 @@ namespace AccountPasswordManager
                 }
                 else
                 {
+
                     // Update the old password
                     accountList[n].PasswordInfo.Password = newPassword;
 

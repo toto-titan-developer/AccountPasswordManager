@@ -1,1 +1,124 @@
-[]
+[
+  
+    {
+      "Description": "Gmail",
+      "UserId": "joe.whitton",
+      "LoginUrl": "https://mail.google.com",
+      "PasswordInfo": {
+        "Password": "GmailPass123!",
+        "StrengthNumber": 72,
+        "StrengthText": "strong",
+        "LastReset": "2026-05-01"
+      },
+      "Notes": "Personal email account"
+    },
+    {
+      "Description": "GitHub",
+      "UserId": "joe_dev",
+      "LoginUrl": "https://github.com",
+      "PasswordInfo": {
+        "Password": "CodeMaster2026!",
+        "StrengthNumber": 85,
+        "StrengthText": "very strong",
+        "LastReset": "2026-04-10"
+      },
+      "Notes": "School projects"
+    },
+    {
+      "Description": "Netflix",
+      "UserId": "family.account",
+      "LoginUrl": "https://netflix.com",
+      "PasswordInfo": {
+        "Password": "MovieNight88",
+        "StrengthNumber": 38,
+        "StrengthText": "medium",
+        "LastReset": "2025-12-15"
+      },
+      "Notes": ""
+    },
+    {
+      "Description": "Steam",
+      "UserId": "gamingjoe",
+      "LoginUrl": "https://store.steampowered.com",
+      "PasswordInfo": {
+        "Password": "SteamRocks99!",
+        "StrengthNumber": 77,
+        "StrengthText": "strong",
+        "LastReset": "2026-01-20"
+      },
+      "Notes": "Gaming account"
+    },
+    {
+      "Description": "Amazon",
+      "UserId": "joe.shopping",
+      "LoginUrl": "https://amazon.ca",
+      "PasswordInfo": {
+        "Password": "ShopSafe2026!",
+        "StrengthNumber": 69,
+        "StrengthText": "strong",
+        "LastReset": "2026-02-01"
+      },
+      "Notes": "Prime member"
+    },
+    {
+      "Description": "Bank Account",
+      "UserId": "jwhitton",
+      "LoginUrl": "https://onlinebank.example",
+      "PasswordInfo": {
+        "Password": "SecureBank456$",
+        "StrengthNumber": 92,
+        "StrengthText": "very strong",
+        "LastReset": "2026-05-20"
+      },
+      "Notes": "Testing financial account"
+    },
+    {
+      "Description": "School Portal",
+      "UserId": "100123456",
+      "LoginUrl": "https://college.example",
+      "PasswordInfo": {
+        "Password": "StudentPass1!",
+        "StrengthNumber": 61,
+        "StrengthText": "strong",
+        "LastReset": "2025-09-01"
+      },
+      "Notes": "INFO3138"
+    },
+    {
+      "Description": "Discord",
+      "UserId": "Joe#1234",
+      "LoginUrl": "https://discord.com",
+      "PasswordInfo": {
+        "Password": "DiscordChat77!",
+        "StrengthNumber": 74,
+        "StrengthText": "strong",
+        "LastReset": "2026-03-12"
+      },
+      "Notes": "Friends and gaming"
+    },
+    {
+      "Description": "Spotify",
+      "UserId": "musicfan",
+      "LoginUrl": "https://spotify.com",
+      "PasswordInfo": {
+        "Password": "Playlist2026",
+        "StrengthNumber": 44,
+        "StrengthText": "medium",
+        "LastReset": "2025-11-10"
+      },
+      "Notes": ""
+    },
+    {
+      "Description": "Fishing Forum",
+      "UserId": "JoeIsFishing",
+      "LoginUrl": "https://fishingforfun.com",
+      "PasswordInfo": {
+        "Password": "BigBass2026!",
+        "StrengthNumber": 81,
+        "StrengthText": "very strong",
+        "LastReset": "2026-06-01"
+      },
+      "Notes": "Community forum"
+    }
+  
+]

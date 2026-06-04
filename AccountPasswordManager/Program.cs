@@ -40,9 +40,20 @@ namespace AccountPasswordManager
             // Initialize the JSON data if it exists
             if (File.Exists(accountFile))
             {
-                // File exists lets read and populate
-                string json = File.ReadAllText(accountFile);
-                accountList = JsonSerializer.Deserialize<List<Account>>(json) ?? new List<Account>();
+                try
+                {
+                    // File exists lets read and populate
+                    string json = File.ReadAllText(accountFile);
+                    var tempList = JsonSerializer.Deserialize<List<Account>>(json) ?? new List<Account>();
+
+
+                    accountList.AddRange(tempList);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                
             }
             else
             {
@@ -212,11 +223,25 @@ namespace AccountPasswordManager
                 {
                     Console.Write("\nEnter minimum password age in weeks: ");
                     var str = Console.ReadLine();
-                    int weeks = int.Parse(str);
+                    int weeks = int.Parse(str!);
                     numWeeks = weeks;
-                    if (numWeeks > 0)
+                    if (numWeeks >= 0)
                     {
                         break;
+                    }
+                    else if(numWeeks < 0)
+                    {
+                        if (hadError)
+                        {
+                            MenuManager.ClearLine(3);
+                        }
+                        else
+                        {
+                            MenuManager.ClearLine(1);
+                        }
+
+                        Console.WriteLine($"Invalid entry of {numWeeks}. Must be 0 or greater");
+                        hadError = true;
                     }
                 }
                 catch (Exception e)
@@ -269,8 +294,13 @@ namespace AccountPasswordManager
                     }
                     else
                     {
-                        MenuManager.ClearLine(1);
+                        if (hadError)
+                            MenuManager.ClearLine(1);
+                        else
+                            MenuManager.ClearLine(0);
+
                         Console.WriteLine($"Select '{index + 1}' is not an option from above. ");
+                        hadError = true;
                     }
                 }
                 else if (Char.ToUpper(input) == 'M')
@@ -329,6 +359,7 @@ namespace AccountPasswordManager
 
                 Console.SetCursorPosition(startCol, confLine);
                 addAcct = Char.ToUpper(Console.ReadKey().KeyChar) == 'Y';
+                Console.WriteLine(); //for spacing for the error messages
 
                 if (addAcct)
                 {
@@ -349,6 +380,9 @@ namespace AccountPasswordManager
                     }
 
                     //else it isn't valid, Identify what is wrong and then retype those lines
+
+
+
                 }
                 else { break; }
             }
@@ -429,12 +463,14 @@ namespace AccountPasswordManager
 
                 // Validate JSON against schema
                 EvaluationResults results =
-                    schema.Evaluate(document.RootElement);
+                    schema.Evaluate(document.RootElement, new EvaluationOptions
+                    {
+                        OutputFormat = OutputFormat.List
+                    });
 
                 // If validation fails, display errors
                 if (!results.IsValid)
                 {
-                    Console.WriteLine("\nERROR: Account validation failed:\n");
                     if (results.Details != null)
                     {
                         // Loop through validation details
@@ -446,7 +482,9 @@ namespace AccountPasswordManager
                                 foreach (var error in detail.Errors)
                                 {
                                     // Prints each error
-                                    Console.WriteLine($"ERROR: {error.Value}");
+                                    int index = detail.InstanceLocation.SegmentCount - 1;
+                                    string property = detail.InstanceLocation.GetSegment(index).ToString();
+                                    Console.WriteLine($"ERROR:{property}: {error.Key} {error.Value}");
                                 }
                             }
                         }

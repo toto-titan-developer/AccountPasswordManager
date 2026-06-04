@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace AccountPasswordManager
@@ -152,23 +153,28 @@ namespace AccountPasswordManager
         public void DisplayMainOptions()
         {
             Console.WriteLine(
+                    "\n+------------------------------------------------------------------------+" +
                     "\nPress # from the above list to select an entry\n" +
                     "Press A to list accounts by password age.\n" +
                     "Press N to add a new entry.\n" +
-                    "Press X to quit.");
+                    "Press X to quit." +
+                    "\n+------------------------------------------------------------------------+");
         }//End DisplayMainOptions()
 
         public void DisplayPasswordOptions()
         {
             Console.WriteLine(
+                    "\n+------------------------------------------------------------------------+" +
                     "\nPress # from the above list to select an entry. \n" +
-                    "Press M to return to the main menu.");
+                    "Press M to return to the main menu." +
+                    "\n +-----------------------------------------------------------------------+");
         }//End DisplayPasswordOptions()
         public void DisplayUpdateOptions()
         {
             //I just copied the MainOptions...
             Console.WriteLine(
-                    "\nPress P to change this password.\n" +
+                    "\n+------------------------------------------------------------------------+" +
+                    "\n\nPress P to change this password.\n" +
                     "Press D to delete this entry.\n" +
                     "Press M to return to the main menu." +
                     "\n\n+------------------------------------------------------------------------+");
@@ -200,9 +206,6 @@ namespace AccountPasswordManager
 
                 Console.WriteLine($" Login URL:         {aView.LoginUrl}");
                 Console.WriteLine($" Notes:             {aView.Notes}");
-
-                Console.WriteLine(
-                "+------------------------------------------------------------------------+");
             }
         }// End SelectedAccount()
 
@@ -219,34 +222,45 @@ namespace AccountPasswordManager
         }// End DisplayAddAccount()
 
         public void DeleteAccount(List<Account> accountList, int n)
-        {
-            // Assigns variable the account to delete
-            Account accountToDelete = accountList[n];
+        { 
+                // Assigns variable the account to delete
+                Account accountToDelete = accountList[n];
 
-            // Makes sure the user wants to delete this account
-            Console.WriteLine("\nAre you sure you want to delete this account? (Y/N)");
-            string input = Console.ReadLine();
+                // Makes sure the user wants to delete this account
+                Console.WriteLine("\nAre you sure you want to delete this account? (Y/N)");
+                char input = Console.ReadKey().KeyChar;
 
             // checks for a yes or no
-            if (input != null && input.ToUpper() == "Y")
+            if (input != null && Char.ToUpper(input) == 'Y')
             {
                 // Removes the account at a specified index
                 accountList.RemoveAt(n);
-                Console.WriteLine("\nAccount deleted successfully.");
+
+                // Save updated list to JSON file
+                string json = JsonSerializer.Serialize(accountList);
+                File.WriteAllText("accountsList.json", json);
             }
             else
             {
                 // Prevented deletion
                 Console.WriteLine("\nDelete cancelled.");
             }
+
+            ClearMenu();
+            DisplayAllEntries(accountList);
+            DisplayMainOptions();
+                
         }// End DeleteAccount()
 
         public void EditAccountPassword(List<Account> accountList, int n)
         {
-            while (true)
+
+            bool passUpdated = false;
+            while (!passUpdated)
             {
                 // Promp user for new password
-                Console.WriteLine("Enter new password: ");
+                
+                Console.Write("\nEnter new password: ");
                 string newPassword = Console.ReadLine();
 
                 //Validate the password
@@ -255,22 +269,26 @@ namespace AccountPasswordManager
                     Console.WriteLine("Password cannot be empty.");
                     continue;
                 }
-                // Validate password using your validator
-                if (!Program.IsPasswordValid(newPassword))
-                {
-                    Console.WriteLine("Password does not meet the requirements.");
-                    continue;
-                }
                 else
                 {
-
                     // Update the old password
                     accountList[n].PasswordInfo.Password = newPassword;
 
                     // update reset date
                     accountList[n].PasswordInfo.LastReset = DateTime.Today.ToString("yyyy-MM-dd");
-                    //Print success!
-                    Console.WriteLine("Password updated successfully.");
+
+                    // Validate then Save updated list to JSON file
+                    string json = JsonSerializer.Serialize(accountList);
+                    bool isValid = Program.ValidateAccount(accountList[n]);
+
+                    if (isValid)
+                    {
+                        File.WriteAllText("accountsList.json", json);
+                        passUpdated = true;
+                        ClearMenu();
+                        SelectAccount(accountList, n);
+                        DisplayUpdateOptions();
+                    }
                     break;
                 }
             }

@@ -62,15 +62,15 @@ namespace AccountPasswordManager
             }
 
 
-            //Enter into a controlled infinite loop with a flag value for exiting (Ending the program)
+            // Enter into a controlled infinite loop with a flag value for exiting (Ending the program)
             while (programRunning)
             {
-                //Valid input comes from method. Only a number from 1 - 9 or A, N or X
+                // Valid input comes from method. Only a number from 1 - 9 or A, N or X
                 char input = HandleMainMenu();
 
-                //Use switch statement to determine selected option
-                //Implement a switch statemet for select #, A, N, X
-                //Selecting an account by number
+                // Use switch statement to determine selected option
+                // Implement a switch statemet for select #, A, N, X
+                // Selecting an account by number
                 if (Char.IsDigit(input))
                 {
                     int index = int.Parse(input.ToString()) - 1;
@@ -79,13 +79,7 @@ namespace AccountPasswordManager
                         MenuManager.SelectAccount(accountList, index);
                         
                         HandleUpdateMenu(accountList, index);
-
-                        // Get Input from the user for this menu selection option
-                        Console.Write("Enter a command: ");
-                        input = Console.ReadKey().KeyChar;
-
-                        // Handle the selection for this input
-
+                      
                         // Clear Menu and Reset for main menu
                         MenuManager.ClearMenu();
                     }
@@ -94,7 +88,6 @@ namespace AccountPasswordManager
                         MenuManager.ClearMenu();
                         Console.WriteLine($"Select '{index + 1}' is not an option from above. ");
                     }
-
                 }
                 else
                 {
@@ -133,7 +126,6 @@ namespace AccountPasswordManager
             MenuManager.DisplayMainOptions();
 
             // ask the user for input
-
             Console.Write("Enter a command: ");
             char input = Console.ReadKey().KeyChar;
 
@@ -179,27 +171,34 @@ namespace AccountPasswordManager
         private static void HandleUpdateMenu(List<Account> accountList, int n)
         {
             bool running = true;
+            MenuManager.DisplayUpdateOptions();
 
             while (running)
             {
-                MenuManager.DisplayUpdateOptions();
-                Console.WriteLine("Enter a Command: ");
-                string input = Console.ReadLine();
+               
+                Console.Write("Enter a Command: ");
+                char input = Console.ReadKey().KeyChar;
 
-                switch (input.ToUpper())
+                switch (Char.ToUpper(input))
                 {
-                    case "P":
+                    case 'P':
                         MenuManager.EditAccountPassword(accountList, n);
                            break;
-                    case "D":
+                    case 'D':
                         MenuManager.DeleteAccount(accountList, n);
-                        break;
-                    case "M":
                         running = false;
+                        break;
+                       
+                    case 'M':
+                        running = false;
+                        MenuManager.ClearMenu();
+                        MenuManager.DisplayAllEntries(accountList);
+                        MenuManager.DisplayMainOptions();
                         break;
 
                     default:
                         Console.WriteLine("Invalid option. Try Again.");
+                        
                             break;
                 }
             }
@@ -369,7 +368,6 @@ namespace AccountPasswordManager
 
 
                     //Validate that the account is valid.
-
                     bool isValid = ValidateAccount(newAccount);
 
                     //if it is valid add the account and return to the main menu
@@ -380,19 +378,11 @@ namespace AccountPasswordManager
                     }
 
                     //else it isn't valid, Identify what is wrong and then retype those lines
-
-
-
                 }
                 else { break; }
             }
             
-
-
-
             MenuManager.ClearMenu();
-
-
         }
 
         private static void TestNUpdatePassInfo(Account acct)
@@ -427,14 +417,6 @@ namespace AccountPasswordManager
             }
         }
 
-        public static bool IsPasswordValid(string password)
-        {
-            // uses the validator to test the password
-            passwordValidator.TestAndScore(password);
-
-            // returns the score of the password.
-            return passwordValidator.Score >= 0;
-        }
 
         /// <summary>
         /// Takes an account object converts it into a JSON as well as the SCHEMA into a Schema object

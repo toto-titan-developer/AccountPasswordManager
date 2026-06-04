@@ -289,6 +289,11 @@ namespace AccountPasswordManager
                         SelectAccount(accountList, n);
                         DisplayUpdateOptions();
                     }
+                    else
+                    {
+                    //allows the user to enter a new password
+                     continue;   
+                    }
                     break;
                 }
             }

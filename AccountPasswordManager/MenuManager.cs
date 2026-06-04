@@ -289,6 +289,10 @@ namespace AccountPasswordManager
                         SelectAccount(accountList, n);
                         DisplayUpdateOptions();
                     }
+                    else
+                    {
+                        continue;
+                    }
                     break;
                 }
             }

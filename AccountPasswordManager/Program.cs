@@ -11,6 +11,7 @@
 using Easy_Password_Validator;
 using Easy_Password_Validator.Models;
 using Json.Schema;
+using System.Numerics;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -28,7 +29,7 @@ namespace AccountPasswordManager
 
         private static bool programRunning = true;
 
-        private static string mainRegex = @"^[ANX]$|^[1-9]\d*$";
+        private static string mainRegex = @"^[ANX]$|^\d+";
 
         
 
@@ -66,14 +67,14 @@ namespace AccountPasswordManager
             while (programRunning)
             {
                 // Valid input comes from method. Only a number from 1 - 9 or A, N or X
-                char input = HandleMainMenu();
+                string input = HandleMainMenu();
 
                 // Use switch statement to determine selected option
                 // Implement a switch statemet for select #, A, N, X
                 // Selecting an account by number
-                if (Char.IsDigit(input))
+                if (int.TryParse(input, out int index))
                 {
-                    int index = int.Parse(input.ToString()) - 1;
+                    index--; //decrement to match indexs
                     if (index >= 0 && index < accountList.Count)
                     {
                         MenuManager.SelectAccount(accountList, index);
@@ -91,7 +92,7 @@ namespace AccountPasswordManager
                 }
                 else
                 {
-                    switch (Char.ToUpper(input))
+                    switch (Char.ToUpper(input[0]))
                     {
                         // Display Old Passwords
                         case 'A':
@@ -115,9 +116,10 @@ namespace AccountPasswordManager
         /// <summary>
         /// Handles the initialization of the main menu and gets the validated entry to check against the switch statement.
         /// This controls the main selection page
+        /// Ensures that the entry either meets a char selection or a valid number selection
         /// </summary>
         /// <returns>char which is the validated input from the user</returns>
-        private static char HandleMainMenu()
+        private static string HandleMainMenu()
         {
             // AccountList call to display 
             MenuManager.DisplayAllEntries(accountList);
@@ -127,28 +129,46 @@ namespace AccountPasswordManager
 
             // ask the user for input
             Console.Write("Enter a command: ");
-            char input = Console.ReadKey().KeyChar;
+            string input = Console.ReadLine() ?? "";
 
             //Validate the entry. Make sure either A, N, or X, Or a Number above 0 is entered
             bool hadError = false;
             while (true)
             {
-                if (Regex.IsMatch(Char.ToUpper(input).ToString(), mainRegex))
-                { break; }
+                if (Regex.IsMatch(input.ToUpper(), mainRegex))
+                { 
+                    
+                    if(int.TryParse(input, out int index))
+                    {
+                        index--;
+                        //If the index is in range (BREAK)
+                        if (index >= 0 && index < accountList.Count)
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        //Not a number and matches REGEX (VALID ENTRY BREAK)
+                        break;
+                    }
+                    
+                
+                }
 
                 //Get New Entry -> display invalid entry
                 if (hadError)
                 {
-                    MenuManager.ClearLine(1);
+                    MenuManager.ClearLine(2);
                 }
                 else
                 {
-                    MenuManager.ClearLine(0);
+                    MenuManager.ClearLine(1);
                 }
 
                 Console.WriteLine($"Invalid entry of '{input}', Select from Menu");
                 Console.Write("Enter a command: ");
-                input = Console.ReadKey().KeyChar;
+                input = Console.ReadLine() ?? "";
                 hadError = true;
             }
 
@@ -214,7 +234,7 @@ namespace AccountPasswordManager
         {
             int numWeeks = 0;
             bool hadError = false;
-            char input;
+            string input;
             //Validation of selecting a whole number for how many weeks
             while (true)
             {
@@ -270,22 +290,15 @@ namespace AccountPasswordManager
             while (true)
             {
                 Console.Write("Enter a command: ");
-                input = Console.ReadKey().KeyChar;
+                input = Console.ReadLine() ?? "";
 
-                if (Char.IsDigit(input))
+                if (int.TryParse(input, out int index))
                 {
-                    int index = int.Parse(input.ToString()) - 1;
+                    index--;
                     if (index >= 0 && index < accountList.Count && passAccts.Contains(accountList[index]))
                     {
                         MenuManager.SelectAccount(accountList, index);
-                        MenuManager.DisplayUpdateOptions();
                         HandleUpdateMenu(accountList, index);
-
-                        //Get Input from the user for this menu selection option
-                        Console.Write("Enter a command: ");
-                        input = Console.ReadKey().KeyChar;
-
-                        //Handle the selection for this input
 
                         //Clear Menu and Reset for main menu
                         MenuManager.ClearMenu();
@@ -294,15 +307,15 @@ namespace AccountPasswordManager
                     else
                     {
                         if (hadError)
-                            MenuManager.ClearLine(1);
+                            MenuManager.ClearLine(2);
                         else
-                            MenuManager.ClearLine(0);
+                            MenuManager.ClearLine(1);
 
                         Console.WriteLine($"Select '{index + 1}' is not an option from above. ");
                         hadError = true;
                     }
                 }
-                else if (Char.ToUpper(input) == 'M')
+                else if (Char.ToUpper(input[0]) == 'M' && input.Length == 1)
                 {
                     //Clears the menu and breaks the loop to go back to our original loop controlling main menu
                     MenuManager.ClearMenu();
@@ -311,9 +324,9 @@ namespace AccountPasswordManager
                 else
                 {
                     if (hadError)
-                        MenuManager.ClearLine(1);
+                        MenuManager.ClearLine(2);
                     else
-                        MenuManager.ClearLine(0);
+                        MenuManager.ClearLine(1);
 
                     Console.WriteLine($"Invalid entry of '{input}' try again");
                     hadError = true;
@@ -333,6 +346,9 @@ namespace AccountPasswordManager
             const int noteLine = 11;
             const int confLine = 13;
 
+            string blankLine = new string(' ', Console.WindowWidth - startCol);
+
+            bool hadError = false;
 
             MenuManager.ClearMenu();
             MenuManager.DisplayAddAccount();
@@ -342,21 +358,51 @@ namespace AccountPasswordManager
             while (true)
             {
                 Console.SetCursorPosition(startCol, descLine);
+                if(hadError)
+                {
+                    Console.Write(blankLine);
+                    Console.SetCursorPosition(startCol, descLine);
+                }
                 newAccount.Description = Console.ReadLine() ?? "";
 
                 Console.SetCursorPosition(startCol, userIDLine);
+                if (hadError)
+                {
+                    Console.Write(blankLine);
+                    Console.SetCursorPosition(startCol, userIDLine);
+                }
                 newAccount.UserId = Console.ReadLine() ?? "";
 
                 Console.SetCursorPosition(startCol, passLine);
+                if (hadError)
+                {
+                    Console.Write(blankLine);
+                    Console.SetCursorPosition(startCol, passLine);
+                }
                 newAccount.PasswordInfo.Password = Console.ReadLine() ?? "";
 
                 Console.SetCursorPosition(startCol, loginLine);
+                if (hadError)
+                {
+                    Console.Write(blankLine);
+                    Console.SetCursorPosition(startCol, loginLine);
+                }
                 newAccount.LoginUrl = Console.ReadLine() ?? "";
 
                 Console.SetCursorPosition(startCol, noteLine);
+                if (hadError)
+                {
+                    Console.Write(blankLine);
+                    Console.SetCursorPosition(startCol, noteLine);
+                }
                 newAccount.Notes = Console.ReadLine() ?? "";
 
                 Console.SetCursorPosition(startCol, confLine);
+                if (hadError)
+                {
+                    Console.Write(blankLine);
+                    Console.SetCursorPosition(startCol, confLine);
+                }
                 addAcct = Char.ToUpper(Console.ReadKey().KeyChar) == 'Y';
                 Console.WriteLine(); //for spacing for the error messages
 
@@ -368,7 +414,7 @@ namespace AccountPasswordManager
 
 
                     //Validate that the account is valid.
-                    bool isValid = ValidateAccount(newAccount);
+                    bool isValid = ValidateAccount(newAccount, out List<string> messages);
 
                     //if it is valid add the account and return to the main menu
                     if (isValid)
@@ -377,7 +423,15 @@ namespace AccountPasswordManager
                         break;
                     }
 
+
+                    //Clear all previous errors
+                    Console.SetCursorPosition(0, Console.GetCursorPosition().Top + 6);
+                    MenuManager.ClearLine(6);
+
+
+                    messages.ForEach(msg => Console.WriteLine(msg));
                     //else it isn't valid, Identify what is wrong and then retype those lines
+                    hadError = true;
                 }
                 else { break; }
             }
@@ -423,8 +477,9 @@ namespace AccountPasswordManager
         /// Parses the JSON into a JsonDocument to be validated against the Schema
         /// We could make a method that contains
         /// </summary>
-        public static bool ValidateAccount(Account account)
+        public static bool ValidateAccount(Account account, out List<string> messages)
         {
+            messages = new List<string>();
             try
             {
                 // Read the JSON schema file
@@ -466,7 +521,8 @@ namespace AccountPasswordManager
                                     // Prints each error
                                     int index = detail.InstanceLocation.SegmentCount - 1;
                                     string property = detail.InstanceLocation.GetSegment(index).ToString();
-                                    Console.WriteLine($"ERROR:{property}: {error.Key} {error.Value}");
+                                    JsonElement? failedValue = detail.InstanceLocation.Evaluate(document.RootElement);
+                                    messages.Add($"ERROR:{property}:\"{failedValue}\" {error.Value}");
                                 }
                             }
                         }

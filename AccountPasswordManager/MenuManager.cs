@@ -228,10 +228,10 @@ namespace AccountPasswordManager
 
                 // Makes sure the user wants to delete this account
                 Console.WriteLine("\nAre you sure you want to delete this account? (Y/N)");
-                char input = Console.ReadKey().KeyChar;
+                bool input = Char.ToUpper(Console.ReadKey().KeyChar) == 'Y';
 
-            // checks for a yes or no
-            if (input != null && Char.ToUpper(input) == 'Y')
+            // checks for a yes otherwise false
+            if (input)
             {
                 // Removes the account at a specified index
                 accountList.RemoveAt(n);
@@ -256,12 +256,14 @@ namespace AccountPasswordManager
         {
 
             bool passUpdated = false;
+            bool hadError = false;
+            int lastCount = 0;
             while (!passUpdated)
             {
                 // Promp user for new password
                 
                 Console.Write("\nEnter new password: ");
-                string newPassword = Console.ReadLine();
+                string newPassword = Console.ReadLine() ?? "";
 
                 //Validate the password
                 if (string.IsNullOrWhiteSpace(newPassword))
@@ -279,7 +281,7 @@ namespace AccountPasswordManager
 
                     // Validate then Save updated list to JSON file
                     string json = JsonSerializer.Serialize(accountList);
-                    bool isValid = Program.ValidateAccount(accountList[n]);
+                    bool isValid = Program.ValidateAccount(accountList[n], out List<string> messages);
 
                     if (isValid)
                     {
@@ -291,9 +293,20 @@ namespace AccountPasswordManager
                     }
                     else
                     {
-                    //allows the user to enter a new password
-                     continue;   
+                        //Clear Lines
+                        if (hadError)
+                            ClearLine(lastCount + 2);
+                        else
+                            ClearLine(1);
+                        //Print Error Messages
+                        messages.ForEach(msg => Console.WriteLine(msg));
+                        //allows the user to enter a new password
+                        lastCount = messages.Count;
+                        hadError = true;
+                        continue;   
                     }
+
+
                     break;
                 }
             }

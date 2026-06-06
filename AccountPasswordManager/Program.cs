@@ -502,7 +502,8 @@ namespace AccountPasswordManager
                 EvaluationResults results =
                     schema.Evaluate(document.RootElement, new EvaluationOptions
                     {
-                        OutputFormat = OutputFormat.List
+                        OutputFormat = OutputFormat.List,
+                        RequireFormatValidation = true
                     });
 
                 // If validation fails, display errors

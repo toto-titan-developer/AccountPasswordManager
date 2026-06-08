@@ -1,7 +1,7 @@
 ﻿////
 ///Summary
 ///Project Account Password Manager - Project 1 - INFO3138
-///Conttributers: Wyatt Henderson, Joe Whitton
+///Contributers: Wyatt Henderson StudentID: 1297741, Joe Whitton StudentID: 1313038
 ///Description: Class files for the Account and Password Objects
 ///Start Date: May 24, 2026
 ///Due Date: June 5th 2026
@@ -23,7 +23,7 @@ namespace AccountPasswordManager
     internal class PasswordInfo
     {
         public string Password { get; set; } = "";
-        public int StrengthNumber { get; set; } = 0;
+        public int StrengthNum { get; set; } = 0;
         public string StrengthText { get; set; } = "";
         public string LastReset {  get; set; } = DateOnly.FromDateTime(DateTime.Today).ToString();
     }

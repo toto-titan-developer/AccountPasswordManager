@@ -1,10 +1,14 @@
-﻿using Microsoft.VisualBasic.FileIO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿////
+///Summary
+///Project Account Password Manager - Project 1 - INFO3138
+///Contributers: Wyatt Henderson StudentID: 1297741, Joe Whitton StudentID: 1313038
+///Description: Abstraction: Helper class to separate some of the helper functions away from the main program.
+///Start Date: May 24, 2026
+///Version: 1.01
+///Due Date: June 5th 2026
+///
+
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace AccountPasswordManager
 {
@@ -51,6 +55,11 @@ namespace AccountPasswordManager
             Console.SetCursorPosition(0, pos);
         }
 
+        /// <summary>
+        /// A contained method to print out all current entries in the data file.
+        /// Used for the main listing of accounts
+        /// </summary>
+        /// <param name="list">A reference to the accountList in the main program</param>
         public void DisplayAllEntries(List<Account> list)
         {
             // Header for Page
@@ -90,6 +99,13 @@ namespace AccountPasswordManager
 
         }//End GetNumberOfWeeks(string date)
 
+        /// <summary>
+        /// Gets a list containing the accounts where the password has not been changed for the provided number of weeks.
+        /// Returns a list of the accounts that meets the requirements
+        /// </summary>
+        /// <param name="list">The accountList used in the main program</param>
+        /// <param name="weeks">The number of weeks gathered from input</param>
+        /// <returns></returns>
         public List<Account> GetListOfPassNotChanged(List<Account> list, int weeks)
         {
             List<Account> passAccounts = new List<Account>();
@@ -149,7 +165,9 @@ namespace AccountPasswordManager
             }
         }// End DisplayPassNotChanged()
 
-
+        /// <summary>
+        /// Prints the Main menu options to the console
+        /// </summary>
         public void DisplayMainOptions()
         {
             Console.WriteLine(
@@ -161,6 +179,9 @@ namespace AccountPasswordManager
                     "\n+------------------------------------------------------------------------+");
         }//End DisplayMainOptions()
 
+        /// <summary>
+        /// Prints the Old Password menu options to the console
+        /// </summary>
         public void DisplayPasswordOptions()
         {
             Console.WriteLine(
@@ -169,6 +190,10 @@ namespace AccountPasswordManager
                     "Press M to return to the main menu." +
                     "\n +-----------------------------------------------------------------------+");
         }//End DisplayPasswordOptions()
+
+        /// <summary>
+        /// Prints the Update menu options to the console
+        /// </summary>
         public void DisplayUpdateOptions()
         {
             //I just copied the MainOptions...
@@ -180,6 +205,12 @@ namespace AccountPasswordManager
                     "\n\n+------------------------------------------------------------------------+");
         }//End DisplayPasswordOptions()
 
+        /// <summary>
+        /// Selects the account entry from the list and displays the information for the account details.
+        /// Account is selected based on the provided index
+        /// </summary>
+        /// <param name="accountList">The accountList used in the main program</param>
+        /// <param name="n">n is the index of the account</param>
         public void SelectAccount(List<Account> accountList, int n)
         {
             {
@@ -199,7 +230,7 @@ namespace AccountPasswordManager
                 Console.WriteLine($" Password:          {aView.PasswordInfo.Password}");
 
                 Console.WriteLine(
-                    $" Password Strength: {aView.PasswordInfo.StrengthText} ({aView.PasswordInfo.StrengthNumber})");
+                    $" Password Strength: {aView.PasswordInfo.StrengthText} ({aView.PasswordInfo.StrengthNum})");
 
                 Console.WriteLine(
                     $" Password Reset:    {aView.PasswordInfo.LastReset:yyyy-MM-dd}");
@@ -209,6 +240,9 @@ namespace AccountPasswordManager
             }
         }// End SelectedAccount()
 
+        /// <summary>
+        /// Displays the labels for entering in new account details.
+        /// </summary>
         public void DisplayAddAccount()
         {
             Console.WriteLine(
@@ -221,6 +255,12 @@ namespace AccountPasswordManager
                 );
         }// End DisplayAddAccount()
 
+        /// <summary>
+        /// Method to handle the functionality of deleting an account's details.
+        /// Deletes it from the active accountList as well as the json data file.
+        /// </summary>
+        /// <param name="accountList">Main account list in the program</param>
+        /// <param name="n">index of the account in the list</param>
         public void DeleteAccount(List<Account> accountList, int n)
         { 
                 // Assigns variable the account to delete
@@ -252,6 +292,13 @@ namespace AccountPasswordManager
                 
         }// End DeleteAccount()
 
+        /// <summary>
+        /// Handles validating and updating the new password for the account.
+        /// If valid it updates the account password on the list as well as the json data file.
+        /// If not valid it prints the error and resets the while loop until valid
+        /// </summary>
+        /// <param name="accountList">accountList from the main program</param>
+        /// <param name="n">index of the account</param>
         public void EditAccountPassword(List<Account> accountList, int n)
         {
 

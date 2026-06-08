@@ -1,8 +1,8 @@
 ﻿////
 ///Summary
 ///Project Account Password Manager - Project 1 - INFO3138
-///Conttributers: Wyatt Henderson, Joe Whitton
-///Description: Using JSON serialization and parsing to pull and validate a JSOn file of account information with a JSON Schema
+///Contributers: Wyatt Henderson StudentID: 1297741, Joe Whitton StudentID: 1313038
+///Description: Using JSON serialization and parsing to pull and validate a JSON file of account information with a JSON Schema
 ///Start Date: May 24, 2026
 ///Version: 1.01
 ///Due Date: June 5th 2026
@@ -11,7 +11,6 @@
 using Easy_Password_Validator;
 using Easy_Password_Validator.Models;
 using Json.Schema;
-using System.Numerics;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -59,7 +58,6 @@ namespace AccountPasswordManager
             else
             {
                 accountList = new();
-                Console.WriteLine("There are currently no saved accounts.");
             }
 
 
@@ -334,6 +332,9 @@ namespace AccountPasswordManager
             }
         }
 
+        /// <summary>
+        /// Handles the menu functionality of adding a new account to memory.
+        /// </summary>
         private static void HandleAddNewAccount()
         {
             bool addAcct;
@@ -439,15 +440,20 @@ namespace AccountPasswordManager
             MenuManager.ClearMenu();
         }
 
+        /// <summary>
+        /// Used for the initial creation of an account to test the entered password and generate a Password Strength and Password Strength Test.
+        /// Works on the real McCoy!
+        /// </summary>
+        /// <param name="acct"></param>
         private static void TestNUpdatePassInfo(Account acct)
         {
             //Perform test of password strength.
             passwordValidator.TestAndScore(acct.PasswordInfo.Password);
 
             //add the password strength score to the new account.
-            acct.PasswordInfo.StrengthNumber = passwordValidator.Score;
+            acct.PasswordInfo.StrengthNum = passwordValidator.Score;
 
-            int score = acct.PasswordInfo.StrengthNumber;
+            int score = acct.PasswordInfo.StrengthNum;
 
             if (score < -40)
             {
@@ -544,6 +550,10 @@ namespace AccountPasswordManager
             }
         }
 
+        /// <summary>
+        /// Adds an account to the active list and updates the Json data file
+        /// </summary>
+        /// <param name="acct">passes a Account object with all its data completed</param>
         private static void AddToAccountList(Account acct)
         {
             //add new account to the accountList

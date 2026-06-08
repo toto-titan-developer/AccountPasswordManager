@@ -4,6 +4,7 @@
   "title": "Account Password Manager",
 
   "type": "object",
+  "additionalProperties": false,
 
   "properties": {
     "Description": {
@@ -23,6 +24,7 @@
 
     "PasswordInfo": {
       "type": "object",
+      "additionalProperties": false,
 
       "properties": {
         "Password": {
